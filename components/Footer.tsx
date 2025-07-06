@@ -5,7 +5,7 @@ export default function Footer() {
   return (
     <footer className='bg-gray-900 text-white pt-16 pb-8'>
       <div className='max-w-[1320px] mx-auto px-4'>
-        <div className="mb-2">
+        <div className='mb-2'>
           <Image
             alt='logo'
             width={80}
@@ -17,10 +17,9 @@ export default function Footer() {
         <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8'>
           <div>
             <div className='flex items-center gap-3 mb-4'>
-          
               <div>
                 <h3 className='text-xl font-playfair font-bold'>
-                  Nwanyị bụ Ife
+                  Nwanyị bụ ịfe
                 </h3>
                 <p className='text-gray-400 mb-4'>
                   Empowering women, celebrating heritage, and honoring
