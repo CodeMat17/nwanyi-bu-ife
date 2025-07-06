@@ -14,7 +14,7 @@ const HeroComponent = () => {
         {/* Banner Image - responsive height matching carousel */}
 
         <div className='flex justify-center md:flex relative aspect-square w-full h-[40vh] sm:h-[80vh] lg:h-[70vh] xl:h-[70vh] rounded-xl overflow-hidden'>
-          <div className="relative aspect-square rounded-xl overflow-hidden border bg-gradient-to-r from-purple-800/80 via-amber-800/80 to-teal-800/80">
+          <div className="relative aspect-video md:aspect-square lg:aspect-video rounded-xl overflow-hidden border bg-gradient-to-r from-purple-800/80 via-amber-800/80 to-teal-800/80">
             <Image
               alt='Festival Banner'
               fill
