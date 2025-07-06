@@ -125,12 +125,12 @@ export default function HeroCarousel() {
       {/* Navigation Arrows */}
       <button
         onClick={() => emblaApi && emblaApi.scrollPrev()}
-        className='absolute left-4 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/20 backdrop-blur-md text-white p-3 rounded-full z-10 transition-all duration-300 shadow-lg'>
+        className='absolute left-4 bottom-4 md:bottom-auto md:top-1/2 md:-translate-y-1/2 bg-white/10 hover:bg-white/20 backdrop-blur-md text-white p-3 rounded-full z-10 transition-all duration-300 shadow-lg'>
         <ChevronLeft size={28} strokeWidth={1.5} />
       </button>
       <button
         onClick={() => emblaApi && emblaApi.scrollNext()}
-        className='absolute right-4 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/20 backdrop-blur-md text-white p-3 rounded-full z-10 transition-all duration-300 shadow-lg'>
+        className='absolute right-4 bottom-4 md:bottom-auto md:top-1/2 md:-translate-y-1/2 bg-white/10 hover:bg-white/20 backdrop-blur-md text-white p-3 rounded-full z-10 transition-all duration-300 shadow-lg'>
         <ChevronRight size={28} strokeWidth={1.5} />
       </button>
     </div>

@@ -1,17 +1,16 @@
-'use client'
+"use client";
 
 import Banner from "@/components/Banner";
-import SectionTitle from "@/components/SectionTitle";
-import InterviewCard from "@/components/InterviewCard";
 import CTA from "@/components/CTA";
-import { motion } from "framer-motion";
-import { interviews } from "@/data/interviews";
 import HeroComponent from "@/components/HeroComponent";
+import InterviewCard from "@/components/InterviewCard";
+import SectionTitle from "@/components/SectionTitle";
+import { interviews } from "@/data/interviews";
+import { motion } from "framer-motion";
 
 export default function Home() {
   return (
     <>
-   
       <HeroComponent />
       <Banner
         title='2025 Festival: A Woman and Her Dream'
