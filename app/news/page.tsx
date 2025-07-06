@@ -193,10 +193,7 @@ export default function NewsPage() {
                 <Calendar className='h-4 w-4 mr-1' />
                 <span className='text-sm'>{featuredArticle.date}</span>
               </div>
-              <div className='flex items-center ml-4'>
-                <Clock className='h-4 w-4 mr-1' />
-                <span className='text-sm'>{featuredArticle.readTime} read</span>
-              </div>
+            
             </div>
 
             <h2 className='text-3xl md:text-4xl font-bold mb-4'>

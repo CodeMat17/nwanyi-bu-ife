@@ -259,23 +259,23 @@ export default function PartnersPage() {
             whileInView={{ x: 0, opacity: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7 }}
-            className='grid grid-cols-2 gap-6'>
-            <div className='bg-gradient-to-br from-amber-400 to-amber-700 rounded-2xl p-8 text-white'>
-              <div className='text-5xl font-bold mb-2'>15+</div>
+            className='grid grid-cols-2 gap-4'>
+            <div className='bg-gradient-to-br from-amber-400 to-amber-700 rounded-2xl p-5 sm:p-8 text-white'>
+              <div className='text-4xl sm:text-5xl font-bold mb-2'>15+</div>
               <div className='text-xl'>Corporate Partners</div>
             </div>
-            <div className='bg-gradient-to-br from-sky-500 to-purple-800 rounded-2xl p-8 text-white'>
-              <div className='text-5xl font-bold mb-2'>3</div>
+            <div className='bg-gradient-to-br from-sky-500 to-purple-800 rounded-2xl p-5 sm:p-8 text-white'>
+              <div className='text-4xl sm:text-5xl font-bold mb-2'>3</div>
               <div className='text-xl'>Countries Represented</div>
             </div>
-            <div className='bg-gradient-to-br from-sky-600 to-purple-700 rounded-2xl p-8 text-white'>
-              <div className='text-5xl font-bold mb-2'>₦50M+</div>
+            <div className='bg-gradient-to-br from-sky-600 to-purple-700 rounded-2xl p-5 sm:p-8 text-white'>
+              <div className='text-4xl sm:text-5xl font-bold mb-2'>₦50M+</div>
               <div className='text-xl'>
                 Invested in Women&apos;s Initiatives
               </div>
             </div>
-            <div className='bg-gradient-to-br from-amber-400 to-amber-700 rounded-2xl p-8 text-white'>
-              <div className='text-5xl font-bold mb-2'>25+</div>
+            <div className='bg-gradient-to-br from-amber-400 to-amber-700 rounded-2xl p-5 sm:p-8 text-white'>
+              <div className='text-4xl sm:text-5xl font-bold mb-2'>25+</div>
               <div className='text-xl'>Community Organizations</div>
             </div>
           </motion.div>

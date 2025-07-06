@@ -32,7 +32,7 @@ export default function Header() {
 
   return (
     <header className='sticky top-0 z-50 bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm shadow-sm'>
-      <div className='max-w-7xl mx-auto py-1.5 px-4'>
+      <div className='max-w-7xl mx-auto py-2 px-4'>
         <div className='flex justify-between items-center h-16'>
           <div className='flex items-center'>
             <Link href='/' className='flex items-center'>
@@ -47,7 +47,7 @@ export default function Header() {
                 />
               </div>
 
-              <div className='ml-3'>
+              <div className='ml-2 sm:ml-3'>
                 <h1 className='text-2xl font-joti font-bold text-gray-900 dark:text-white'>
                   Nwanyị bụ <span className='text-amber-600 dark:text-amber-500'>Ife</span>
                 </h1>
