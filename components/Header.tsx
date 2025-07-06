@@ -65,9 +65,9 @@ export default function Header() {
                 key={item.name}
                 href={item.href}
                 className={`font-medium ${item.href === pathname
-                  ? "text-amber-500 hover:text-amber-700 transition-colors"
+                  ? "text-amber-500 hover:text-blue-500 transition-colors"
                   : "text-gray-700 dark:text-gray-200 hover:text-amber-600 dark:hover:text-amber-500 transition-colors"
-                  }`}>
+                  } ${item.name === 'Register' ? 'bg-amber-600 text-white p-2 rounded-full hover:bg-amber-100': ''}`}>
                 {item.name}
               </Link>
             ))}
