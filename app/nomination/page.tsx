@@ -269,7 +269,7 @@ export default function NominationPage() {
       <div className='max-w-5xl mx-auto px-4 py-8'>
         {/* Mobile Guidelines (shown on small screens) */}
         <div className='md:hidden mb-8'>
-          <Card className='border-0 shadow-lg'>
+          <Card className='border-0 shadow-lg bg-amber-200/40 dark:bg-amber-700/40'>
             <CardHeader className='  text-amber-600 '>
               <CardTitle className=' text-xl tracking-wide'>
                 Nomination Guidelines
@@ -499,7 +499,7 @@ export default function NominationPage() {
           {/* Desktop Guidelines (fixed on right for large screens) */}
           <div className='hidden md:block w-80 flex-shrink-0'>
             <div className='sticky top-8'>
-              <Card className='border-0 shadow-lg'>
+              <Card className='border-0 shadow-lg bg-amber-200/40 dark:bg-amber-700/40'>
                 <CardHeader className=' text-amber-600 '>
                   <CardTitle className=' text-xl  tracking-wide'>
                     Nomination Guidelines
