@@ -1,12 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-} from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -271,47 +266,44 @@ export default function NominationPage() {
         subtitle='Recognize outstanding individuals contributing to our cultural heritage'
       />
 
-      <section className='py-12 px-4 max-w-6xl mx-auto flex flex-col lg:flex-row gap-8'>
-        <div className='top-24 mx-auto w-[512px] lg:w-[30%]'>
-          <div className=' '>
-            <Card className='border-0 shadow-lg'>
-              <CardHeader className=' text-amber-600'>
-                <CardTitle className=' text-xl font-serif tracking-wide'>
-                  Nomination Guidelines
-                </CardTitle>
-              </CardHeader>
-              <CardContent className='p-6 space-y-4'>
-                <ul className='list-disc pl-5 space-y-3 text-sm'>
-                  <li>All fields marked with * are required</li>
-                  <li>Provide accurate contact information</li>
-                  <li>
-                    Reason for nomination should be at least 50 characters
-                  </li>
-                  <li>Nominations close on October 15, 2025</li>
-                  <li>You may nominate multiple individuals</li>
-                  <li>Self-nominations are allowed</li>
-                </ul>
-              </CardContent>
-            </Card>
-          </div>
+      <div className='max-w-5xl mx-auto px-4 py-8'>
+        {/* Mobile Guidelines (shown on small screens) */}
+        <div className='md:hidden mb-8'>
+          <Card className='border-0 shadow-lg'>
+            <CardHeader className='  text-amber-600 '>
+              <CardTitle className='text-white text-xl tracking-wide'>
+                Nomination Guidelines
+              </CardTitle>
+            </CardHeader>
+            <CardContent className='p-6 space-y-4'>
+              <ul className='list-disc pl-5 space-y-2 text-sm'>
+                <li>All fields marked with * are required</li>
+                <li>Provide accurate contact information</li>
+                <li>Reason for nomination should be at least 50 characters</li>
+                <li>Nominations close on December 31, 2025</li>
+                <li>You may nominate multiple individuals</li>
+              </ul>
+            </CardContent>
+          </Card>
         </div>
 
-        <div className='mx-auto w-[512px] lg:w-[70%] space-y-8'>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className='space-y-8 '>
-            {/* Nominator Card */}
-            <div>
-              <Card className='border-0 shadow-xl   dark:border dark:bg-gray-700'>
+        <div className='flex flex-col md:flex-row gap-8'>
+          {/* Main Form Content */}
+          <div className='flex-1'>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className='space-y-6'>
+              {/* Nominator Card */}
+              <Card className='border-0 shadow-xl dark:border dark:bg-gray-700'>
                 <CardHeader className=''>
-                  <CardTitle className=' text-2xl tracking-wide'>
+                  <CardTitle className=' text-xl  tracking-wide'>
                     Your Information
                   </CardTitle>
                 </CardHeader>
-                <CardContent className='p-6 md:p-8 space-y-6'>
-                  <div className='grid grid-cols-1 gap-6'>
+                <CardContent className='p-6 space-y-4'>
+                  <div className='grid grid-cols-1 gap-4'>
                     <div>
                       <Label htmlFor='nominator.fullName'>Full Name *</Label>
                       <Input
@@ -320,7 +312,7 @@ export default function NominationPage() {
                         value={formData.nominator.fullName}
                         onChange={handleChange}
                         placeholder='Your full name'
-                        className='mt-2'
+                        className='mt-1'
                       />
                       {errors.nominator?.fullName && (
                         <p className='text-red-500 text-sm mt-1'>
@@ -338,7 +330,7 @@ export default function NominationPage() {
                         value={formData.nominator.email}
                         onChange={handleChange}
                         placeholder='your@email.com'
-                        className='mt-2'
+                        className='mt-1'
                       />
                       {errors.nominator?.email && (
                         <p className='text-red-500 text-sm mt-1'>
@@ -355,7 +347,7 @@ export default function NominationPage() {
                         value={formData.nominator.phone}
                         onChange={handleChange}
                         placeholder='+234 800 000 0000'
-                        className='mt-2'
+                        className='mt-1'
                       />
                       {errors.nominator?.phone && (
                         <p className='text-red-500 text-sm mt-1'>
@@ -366,145 +358,171 @@ export default function NominationPage() {
                   </div>
                 </CardContent>
               </Card>
-            </div>
 
-            {/* Nominee Card */}
-            <div>
-              <Card className='border-0 shadow-xl  dark:border dark:bg-gray-700'>
+              {/* Nominee Card */}
+              <Card className='border-0 shadow-xl dark:border dark:bg-gray-700'>
                 <CardHeader className=''>
-                  <CardTitle className=' text-2xl  tracking-wide'>
+                  <CardTitle className=' text-xl tracking-wide'>
                     Nominee Information
                   </CardTitle>
                 </CardHeader>
-                <CardContent className='p-6 md:p-8 space-y-6'>
-                  <div>
-                    <Label htmlFor='nominee.fullName'>Full Name *</Label>
-                    <Input
-                      id='nominee.fullName'
-                      name='nominee.fullName'
-                      value={formData.nominee.fullName}
-                      onChange={handleChange}
-                      placeholder="Nominee's full name"
-                      className='mt-2'
-                    />
-                    {errors.nominee?.fullName && (
-                      <p className='text-red-500 text-sm mt-1'>
-                        {errors.nominee.fullName}
-                      </p>
-                    )}
-                  </div>
+                <CardContent className='p-6 space-y-4'>
+                  <div className='grid grid-cols-1 gap-4'>
+                    <div>
+                      <Label htmlFor='nominee.fullName'>Full Name *</Label>
+                      <Input
+                        id='nominee.fullName'
+                        name='nominee.fullName'
+                        value={formData.nominee.fullName}
+                        onChange={handleChange}
+                        placeholder="Nominee's full name"
+                        className='mt-1'
+                      />
+                      {errors.nominee?.fullName && (
+                        <p className='text-red-500 text-sm mt-1'>
+                          {errors.nominee.fullName}
+                        </p>
+                      )}
+                    </div>
 
-                  <div>
-                    <Label htmlFor='nominee.title'>Title/Position *</Label>
-                    <Input
-                      id='nominee.title'
-                      name='nominee.title'
-                      value={formData.nominee.title}
-                      onChange={handleChange}
-                      placeholder='e.g. Cultural Ambassador'
-                      className='mt-2'
-                    />
-                    {errors.nominee?.title && (
-                      <p className='text-red-500 text-sm mt-1'>
-                        {errors.nominee.title}
-                      </p>
-                    )}
-                  </div>
+                    <div>
+                      <Label htmlFor='nominee.title'>Title/Position *</Label>
+                      <Input
+                        id='nominee.title'
+                        name='nominee.title'
+                        value={formData.nominee.title}
+                        onChange={handleChange}
+                        placeholder='e.g. Cultural Ambassador'
+                        className='mt-1'
+                      />
+                      {errors.nominee?.title && (
+                        <p className='text-red-500 text-sm mt-1'>
+                          {errors.nominee.title}
+                        </p>
+                      )}
+                    </div>
 
-                  <div>
-                    <Label htmlFor='nominee.email'>Email *</Label>
-                    <Input
-                      id='nominee.email'
-                      name='nominee.email'
-                      type='email'
-                      value={formData.nominee.email}
-                      onChange={handleChange}
-                      placeholder='nominee@email.com'
-                      className='mt-2'
-                    />
-                    {errors.nominee?.email && (
-                      <p className='text-red-500 text-sm mt-1'>
-                        {errors.nominee.email}
-                      </p>
-                    )}
-                  </div>
+                    <div>
+                      <Label htmlFor='nominee.email'>Email *</Label>
+                      <Input
+                        id='nominee.email'
+                        name='nominee.email'
+                        type='email'
+                        value={formData.nominee.email}
+                        onChange={handleChange}
+                        placeholder='nominee@email.com'
+                        className='mt-1'
+                      />
+                      {errors.nominee?.email && (
+                        <p className='text-red-500 text-sm mt-1'>
+                          {errors.nominee.email}
+                        </p>
+                      )}
+                    </div>
 
-                  <div>
-                    <Label htmlFor='nominee.phone'>Phone Number *</Label>
-                    <Input
-                      id='nominee.phone'
-                      name='nominee.phone'
-                      value={formData.nominee.phone}
-                      onChange={handleChange}
-                      placeholder='+234 800 000 0000'
-                      className='mt-2'
-                    />
-                    {errors.nominee?.phone && (
-                      <p className='text-red-500 text-sm mt-1'>
-                        {errors.nominee.phone}
-                      </p>
-                    )}
-                  </div>
+                    <div>
+                      <Label htmlFor='nominee.phone'>Phone Number *</Label>
+                      <Input
+                        id='nominee.phone'
+                        name='nominee.phone'
+                        value={formData.nominee.phone}
+                        onChange={handleChange}
+                        placeholder='+234 800 000 0000'
+                        className='mt-1'
+                      />
+                      {errors.nominee?.phone && (
+                        <p className='text-red-500 text-sm mt-1'>
+                          {errors.nominee.phone}
+                        </p>
+                      )}
+                    </div>
 
-                  <div>
-                    <Label htmlFor='nominee.reason'>
-                      Reason for Nomination *
-                    </Label>
-                    <Textarea
-                      id='nominee.reason'
-                      name='nominee.reason'
-                      value={formData.nominee.reason}
-                      onChange={handleChange}
-                      placeholder='Describe their contributions, achievements, and impact (minimum 50 characters)'
-                      className='min-h-[150px] mt-2'
-                    />
-                    {errors.nominee?.reason && (
-                      <p className='text-red-500 text-sm mt-1'>
-                        {errors.nominee.reason}
+                    <div>
+                      <Label htmlFor='nominee.reason'>
+                        Reason for Nomination *
+                      </Label>
+                      <Textarea
+                        id='nominee.reason'
+                        name='nominee.reason'
+                        value={formData.nominee.reason}
+                        onChange={handleChange}
+                        placeholder='Describe their contributions, achievements, and impact (minimum 50 characters)'
+                        className='min-h-[120px] mt-1'
+                      />
+                      {errors.nominee?.reason && (
+                        <p className='text-red-500 text-sm mt-1'>
+                          {errors.nominee.reason}
+                        </p>
+                      )}
+                      <p className='text-sm text-gray-500 mt-1'>
+                        {formData.nominee.reason.length}/500 characters
                       </p>
-                    )}
-                    <p className='text-sm text-gray-500 mt-2'>
-                      {formData.nominee.reason.length}/500 characters
-                    </p>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
+
+              <Button
+                type='submit'
+                onClick={handleSubmit}
+                className='bg-amber-600 hover:bg-amber-700 px-8 py-4 text-lg w-full'
+                disabled={isSubmitting}>
+                {isSubmitting ? (
+                  <>
+                    <svg
+                      className='animate-spin -ml-1 mr-3 h-5 w-5 text-white'
+                      xmlns='http://www.w3.org/2000/svg'
+                      fill='none'
+                      viewBox='0 0 24 24'>
+                      <circle
+                        className='opacity-25'
+                        cx='12'
+                        cy='12'
+                        r='10'
+                        stroke='currentColor'
+                        strokeWidth='4'></circle>
+                      <path
+                        className='opacity-75'
+                        fill='currentColor'
+                        d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z'></path>
+                    </svg>
+                    Submitting...
+                  </>
+                ) : (
+                  "Submit Nomination"
+                )}
+              </Button>
+            </motion.div>
+          </div>
+
+          {/* Desktop Guidelines (fixed on right for large screens) */}
+          <div className='hidden md:block w-80 flex-shrink-0'>
+            <div className='sticky top-8'>
+              <Card className='border-0 shadow-lg'>
+                <CardHeader className=' text-amber-600 '>
+                  <CardTitle className=' text-xl font-serif tracking-wide'>
+                    Nomination Guidelines
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className='p-6 space-y-4'>
+                  <ul className='list-disc pl-5 space-y-3 text-sm'>
+                    <li>All fields marked with * are required</li>
+                    <li>Provide accurate contact information</li>
+                    <li>
+                      Reason for nomination should be at least 50 characters
+                    </li>
+                    <li>Nominations close on December 31, 2025</li>
+                    <li>You may nominate multiple individuals</li>
+                    <li>Self-nominations are allowed</li>
+                    <li>Winners will be notified via email</li>
+                    <li>Award ceremony will be held in March 2026</li>
+                  </ul>
+                </CardContent>
+              </Card>
             </div>
-          </motion.div>
-          <div className='flex justify-center'>
-            <Button
-              type='submit'
-              onClick={handleSubmit}
-              className='bg-amber-600 hover:bg-amber-700 px-8 py-6 text-lg w-full '
-              disabled={isSubmitting}>
-              {isSubmitting ? (
-                <>
-                  <svg
-                    className='animate-spin -ml-1 mr-3 h-5 w-5 text-white'
-                    xmlns='http://www.w3.org/2000/svg'
-                    fill='none'
-                    viewBox='0 0 24 24'>
-                    <circle
-                      className='opacity-25'
-                      cx='12'
-                      cy='12'
-                      r='10'
-                      stroke='currentColor'
-                      strokeWidth='4'></circle>
-                    <path
-                      className='opacity-75'
-                      fill='currentColor'
-                      d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z'></path>
-                  </svg>
-                  Submitting...
-                </>
-              ) : (
-                "Submit Nomination"
-              )}
-            </Button>
           </div>
         </div>
-      </section>
+      </div>
     </div>
   );
 }
