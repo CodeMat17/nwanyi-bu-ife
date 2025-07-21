@@ -280,8 +280,9 @@ export default function NominationPage() {
                 <li>All fields marked with * are required</li>
                 <li>Provide accurate contact information</li>
                 <li>Reason for nomination should be at least 50 characters</li>
-                <li>Nominations close on December 31, 2025</li>
+                <li>Nominations close on October 15, 2025</li>
                 <li>You may nominate multiple individuals</li>
+                <li>Self-nominations are allowed</li>
               </ul>
             </CardContent>
           </Card>
@@ -500,7 +501,7 @@ export default function NominationPage() {
             <div className='sticky top-8'>
               <Card className='border-0 shadow-lg'>
                 <CardHeader className=' text-amber-600 '>
-                  <CardTitle className=' text-xl font-serif tracking-wide'>
+                  <CardTitle className=' text-xl  tracking-wide'>
                     Nomination Guidelines
                   </CardTitle>
                 </CardHeader>
@@ -511,11 +512,9 @@ export default function NominationPage() {
                     <li>
                       Reason for nomination should be at least 50 characters
                     </li>
-                    <li>Nominations close on December 31, 2025</li>
+                    <li>Nominations close on October 15, 2025</li>
                     <li>You may nominate multiple individuals</li>
                     <li>Self-nominations are allowed</li>
-                    <li>Winners will be notified via email</li>
-                    <li>Award ceremony will be held in March 2026</li>
                   </ul>
                 </CardContent>
               </Card>
