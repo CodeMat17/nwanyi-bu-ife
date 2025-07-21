@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Inter, Joti_One } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
+import { Toaster } from "@/components/ui/sonner";
+
 import Footer from "@/components/Footer";
 import { ThemeProvider } from "@/components/theme-provider";
 
@@ -55,14 +57,14 @@ export default function RootLayout({
     <html lang='en' className={`${inter.variable} ${joti.variable}`}>
       <body className='bg-gradient-to-b from-white to-amber-50 dark:from-gray-900 dark:to-gray-800 min-h-screen flex flex-col'>
         <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
+          attribute='class'
+          defaultTheme='system'
           enableSystem
-          disableTransitionOnChange
-        >
+          disableTransitionOnChange>
           <Header />
           <main className='flex-grow'>{children}</main>
           <Footer />
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>

@@ -23,7 +23,8 @@ export default function ContactPage() {
       <section className='py-16 px-4 max-w-7xl mx-auto'>
         <div className='grid grid-cols-1 lg:grid-cols-2 gap-12'>
           {/* Contact Form */}
-          <motion.div
+          <div>
+              <motion.div
             className='bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-xl'
             initial={{ y: 30, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
@@ -31,7 +32,6 @@ export default function ContactPage() {
             <h2 className='text-3xl font-bold mb-6'>Send Us a Message</h2>
 
             <form className='space-y-6'>
-              <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
                 <div>
                   <label
                     htmlFor='name'
@@ -58,7 +58,6 @@ export default function ContactPage() {
                     placeholder='you@example.com'
                   />
                 </div>
-              </div>
 
               <div>
                 <label
@@ -96,6 +95,8 @@ export default function ContactPage() {
             </form>
           </motion.div>
 
+          </div>
+        
           {/* Contact Information */}
           <motion.div
             className='space-y-8'
@@ -103,7 +104,7 @@ export default function ContactPage() {
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.1 }}>
             {/* Contact Details */}
-            <div className='bg-purple-50 dark:bg-gray-800 rounded-2xl p-8'>
+            <div className='bg-amber-500/10  dark:bg-gray-800 rounded-2xl p-8'>
               <h2 className='text-3xl font-bold mb-6'>Get In Touch</h2>
 
               <div className='space-y-6'>
@@ -152,7 +153,7 @@ export default function ContactPage() {
             </div>
 
             {/* Office Hours */}
-            <div className='bg-gradient-to-br from-sky-800 to-purple-600 text-white rounded-2xl p-8'>
+            <div className='bg-purple-950/70 text-white rounded-2xl p-8'>
               <div className='flex items-center mb-4'>
                 <Clock className='h-6 w-6 text-amber-300 mr-3' />
                 <h3 className='text-2xl font-bold'>Office Hours</h3>

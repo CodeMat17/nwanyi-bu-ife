@@ -4,8 +4,11 @@
 import CulturalPattern from "@/components/CulturalPattern";
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { Calendar, Clock, Tag, Search, ArrowRight } from "lucide-react";
+import { Calendar, Tag, Search, ArrowRight, MousePointerClick } from "lucide-react";
 import GlowingBanner from "@/components/GlowingBanner";
+import Image from "next/image";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 // Article data type
 type Article = {
@@ -17,6 +20,7 @@ type Article = {
   category: string;
   image: string;
   featured?: boolean;
+  slug: string;
 };
 
 // Category type
@@ -35,8 +39,9 @@ const articles: Article[] = [
     date: "June 15, 2025",
     readTime: "4 min",
     category: "Festival Updates",
-    image: "/theme-announcement.jpg",
+    image: "/carousel/img_15.jpg",
     featured: true,
+    slug: "2025-festival-theme-announcement",
   },
   {
     id: 2,
@@ -46,7 +51,8 @@ const articles: Article[] = [
     date: "May 28, 2025",
     readTime: "6 min",
     category: "Awards",
-    image: "/awardees.jpg",
+    image: "/carousel/img_14.jpg",
+    slug: "meet-the-trailblazing-women-receiving-nwanyi-bu-ife-awards",
   },
   {
     id: 3,
@@ -56,7 +62,8 @@ const articles: Article[] = [
     date: "May 20, 2025",
     readTime: "8 min",
     category: "Cultural Heritage",
-    image: "/weavers.jpg",
+    image: "/carousel/img_13.jpg",
+    slug: "preserving-igbo-textile-traditions-the-women-weavers-of-nsukka",
   },
   {
     id: 4,
@@ -66,7 +73,8 @@ const articles: Article[] = [
     date: "May 5, 2025",
     readTime: "3 min",
     category: "Festival Updates",
-    image: "/registration.jpg",
+    image: "/carousel/img_12.jpg",
+    slug: "early-bird-registration-opens-with-special-discounts",
   },
   {
     id: 5,
@@ -77,7 +85,8 @@ const articles: Article[] = [
     date: "April 30, 2025",
     readTime: "10 min",
     category: "Women Empowerment",
-    image: "/education.jpg",
+    image: "/carousel/img_11.jpg",
+    slug: "from-classroom-to-boardroom-educations-role-in-womens-empowerment",
   },
   {
     id: 6,
@@ -88,7 +97,8 @@ const articles: Article[] = [
     date: "April 18, 2025",
     readTime: "7 min",
     category: "Cultural Heritage",
-    image: "/council.jpg",
+    image: "/carousel/img_10.jpg",
+    slug: "the-resurgence-of-igbo-womens-council-systems-in-modern-governance",
   },
   {
     id: 7,
@@ -98,7 +108,8 @@ const articles: Article[] = [
     date: "April 10, 2025",
     readTime: "5 min",
     category: "Festival Program",
-    image: "/tech-workshop.jpg",
+    image: "/carousel/img_9.jpg",
+    slug: "tech-innovation-workshop-bridging-the-gender-gap-in-stem",
   },
   {
     id: 8,
@@ -109,7 +120,8 @@ const articles: Article[] = [
     date: "March 28, 2025",
     readTime: "4 min",
     category: "Partnerships",
-    image: "/un-partnership.jpg",
+    image: "/carousel/img_8.jpg",
+    slug: "nwanyi-bu-ife-festival-partners-with-un-women-for-global-initiative",
   },
 ];
 
@@ -162,8 +174,6 @@ export default function NewsPage() {
     <div className='relative overflow-hidden'>
       <CulturalPattern />
 
-   
-
       {/* Glowing Banner */}
       <GlowingBanner
         title='News & Stories'
@@ -173,12 +183,18 @@ export default function NewsPage() {
       {/* Featured Article */}
       <section className='py-16 px-4 max-w-7xl mx-auto'>
         <motion.div
-          className='grid grid-cols-1 lg:grid-cols-2 gap-12 items-center'
+          className='grid grid-cols-1 md:grid-cols-2 gap-12 items-center'
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8 }}>
-          <div className='relative rounded-2xl overflow-hidden aspect-square'>
-            <div className='bg-gray-200 border-2 border-dashed w-full h-full' />
+          <div className='relative rounded-2xl overflow-hidden aspect-video w-full md:max-w-xl mx-auto h-96'>
+            <Image
+              src={featuredArticle.image}
+              alt={featuredArticle.title}
+              fill
+              className='object-cover'
+              priority
+            />
             <div className='absolute top-4 left-4 bg-amber-500 text-white px-4 py-1 rounded-full font-bold'>
               Featured Story
             </div>
@@ -193,19 +209,18 @@ export default function NewsPage() {
                 <Calendar className='h-4 w-4 mr-1' />
                 <span className='text-sm'>{featuredArticle.date}</span>
               </div>
-            
             </div>
 
-            <h2 className='text-3xl md:text-4xl font-bold mb-4'>
+            <h2 className='text-3xl lg:text-3xl font-bold mb-4'>
               {featuredArticle.title}
             </h2>
             <p className='text-lg text-muted-foreground mb-6'>
               {featuredArticle.excerpt}
             </p>
-            <button className='flex items-center text-sky-500 font-bold group'>
+            <Link href={`/news/${featuredArticle.slug}`} className='flex items-center text-sky-500 font-bold group'>
               Read Full Article
               <ArrowRight className='h-5 w-5 ml-2 transition-transform group-hover:translate-x-1' />
-            </button>
+            </Link>
           </div>
         </motion.div>
       </section>
@@ -246,37 +261,48 @@ export default function NewsPage() {
 
           {/* Articles Grid */}
           {filteredArticles.length > 0 ? (
-            <div className='grid grid-cols-1 md:grid-cols-2 gap-8'>
+            <div className='grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3'>
               {otherArticles.map((article, index) => (
                 <motion.div
                   key={article.id}
-                  className='bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow'
+                  className='group bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow'
                   initial={{ y: 30, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
-                  whileHover={{ y: -10 }}>
-                  <div className='relative h-56'>
-                    <div className='bg-gray-200 border-2 border-dashed w-full h-full' />
-                    <div className='absolute top-4 left-4 bg-amber-500 text-white px-3 py-1 rounded-full text-sm'>
+                  whileHover={{ y: -3 }}>
+                  <div className='relative h-64 lg:h-48'>
+                    <div className='relative border-2 border-dashed w-full h-full'>
+                      <Image
+                        alt='image'
+                        fill
+                        src={article.image}
+                        className='object-cover'
+                      />
+                    </div>
+                    <div className='absolute top-4 left-4 bg-amber-500/50 text-white px-3 py-1 rounded-full text-sm'>
                       {article.category}
                     </div>
                   </div>
-                  <div className='p-6'>
-                    <div className='flex items-center text-muted-foreground text-sm mb-3'>
+                  <div className='px-6 py-4'>
+                    <div className='flex items-center text-muted-foreground text-sm mb-1'>
                       <Calendar className='h-4 w-4 mr-1' />
                       <span>{article.date}</span>
-                      <span className='mx-2'>•</span>
-                      <Clock className='h-4 w-4 mr-1' />
-                      <span>{article.readTime} read</span>
+                    
                     </div>
-                    <h3 className='text-xl font-bold mb-3'>{article.title}</h3>
-                    <p className='text-muted-foreground mb-4 line-clamp-3'>
-                      {article.excerpt}
-                    </p>
-                    <button className='flex items-center text-sky-500 font-medium group'>
-                      Continue Reading
-                      <ArrowRight className='h-4 w-4 ml-1 transition-transform group-hover:translate-x-1' />
-                    </button>
+                    <h3 className='text-lg font-bold mb-3 leading-6'>
+                      {article.title}
+                    </h3>
+
+                    <Button
+                      asChild
+                      size={"sm"}
+                      variant={"outline"}
+                      className='border-amber-500 text-amber-500 group-hover:bg-amber-500 group-hover:text-white'>
+                      <Link href={`/news/${article.slug}`}>
+                        Continue Reading
+                        <MousePointerClick className='h-4 w-4 ml-1 transition-transform duration-500 group-hover:ml-3 group-hover:rotate-90 group-hover:scale-200' />
+                      </Link>
+                    </Button>
                   </div>
                 </motion.div>
               ))}

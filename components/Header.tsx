@@ -12,6 +12,7 @@ const navigation = [
   { name: "Home", href: "/" },
   { name: "About", href: "/about" },
   { name: "Program", href: "/program" },
+  { name: "Interviews", href: "/interviews" },
   { name: "Gallery", href: "/gallery" },
   { name: "Partners", href: "/partners" },
   { name: "News", href: "/news" },
@@ -32,7 +33,7 @@ export default function Header() {
 
   return (
     <header className='sticky top-0 z-50 bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm shadow-sm'>
-      <div className='max-w-7xl mx-auto py-2 px-4'>
+      <div className='py-2 px-4'>
         <div className='flex justify-between items-center h-16'>
           <div className='flex items-center'>
             <Link href='/' className='flex items-center'>
@@ -40,8 +41,8 @@ export default function Header() {
                 <Image
                   alt='logo'
                   priority
-                  width={50}
-                  height={60}
+                  width={45}
+                  height={55}
                   src='/logo.webp'
                   className='object-cover aspect-auto shrink-0'
                 />
@@ -50,19 +51,17 @@ export default function Header() {
               <div className='ml-2 sm:ml-3'>
                 <h1 className='text-2xl font-joti font-bold text-gray-900 dark:text-white'>
                   Nwanyị bụ{" "}
-                  <span className='text-amber-600 dark:text-amber-500'>
+                  <span className='text-amber-500'>
                     ịfe
                   </span>
                 </h1>
-                <p className='text-xs text-gray-500 dark:text-gray-400 -mt-1'>
-                  Women Empowerment Festival
-                </p>
+              
               </div>
             </Link>
           </div>
 
           {/* Desktop Navigation */}
-          <nav className='hidden lg:flex lg:items-center lg:gap-6'>
+          <nav className='hidden lg:flex lg:items-center lg:gap-4 xl:gap-6'>
             {navigation.map((item) => (
               <Link
                 key={item.name}
@@ -73,7 +72,7 @@ export default function Header() {
                     : "text-gray-700 dark:text-gray-200 hover:text-amber-600 dark:hover:text-amber-500 transition-colors"
                 } ${
                   item.name === "Register"
-                    ? "bg-amber-600 text-white p-2 rounded-full hover:bg-amber-100"
+                    ? "bg-amber-500 text-white px-3 py-1.5 rounded-full hover:bg-amber-100"
                     : ""
                 }`}>
                 {item.name}

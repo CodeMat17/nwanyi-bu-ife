@@ -11,34 +11,122 @@ const slides = [
   {
     id: 1,
     title: "Empowering Women, Celebrating Heritage",
-    subtitle: "Join us for the annual Nwanyị bụ Ife Festival",
+    subtitle: "Empowerment",
     image: "/carousel/img_1.jpg",
     cta: "Learn More",
     color: "from-purple-900/80",
   },
   {
     id: 2,
-    title: "A Woman and Her Dream: Where Are Our Women?",
-    subtitle: "2025 Festival Theme - November 7, 2024",
+    title: "Unity in Cultural Celebration",
+    subtitle: "Togetherness",
     image: "/carousel/img_2.jpg",
     cta: "See Program",
     color: "from-amber-800/80",
   },
   {
     id: 3,
-    title: "Showcasing Cultural Heritage",
-    subtitle: "Experience the richness of Igbo traditions",
+    title: "Awards Highlight Exceptional Talent",
+    subtitle: "Excellence",
     image: "/carousel/img_3.jpg",
     cta: "View Gallery",
     color: "from-teal-800/80",
   },
   {
     id: 4,
-    title: "Where Are Our Women?",
-    subtitle: "2025 Festival Theme - November 7, 2024",
+    title: "Empowering Women, Celebrating Heritage",
+    subtitle: "Heritage",
     image: "/carousel/img_4.jpg",
     cta: "See Program",
     color: "from-amber-800/80",
+  },
+  {
+    id: 5,
+    title: "Our Women of valour",
+    subtitle: "Excellence",
+    image: "/carousel/img_5.jpg",
+    cta: "Learn More",
+    color: "from-purple-900/80",
+  },
+  {
+    id: 6,
+    title: "A Woman and Her Dream",
+    subtitle: "Heritage",
+    image: "/carousel/img_6.jpg",
+    cta: "See Program",
+    color: "from-amber-800/80",
+  },
+  {
+    id: 7,
+    title: "Celebrating Strength at Nwanyị bụ ịfe 2024",
+    subtitle: "Cultural Pride",
+    image: "/carousel/img_7.jpg",
+    cta: "View Gallery",
+    color: "from-teal-800/80",
+  },
+  {
+    id: 8,
+    title: "Joyful Moments at Nwanyị bụ ịfe 2024",
+    subtitle: "Festivity",
+    image: "/carousel/img_8.jpg",
+    cta: "See Program",
+    color: "from-amber-800/80",
+  },
+  {
+    id: 9,
+    title: "Colorful Scenes from 2024 Festival",
+    subtitle: "Vibrance",
+    image: "/carousel/img_9.jpg",
+    cta: "Learn More",
+    color: "from-purple-900/80",
+  },
+  {
+    id: 10,
+    title: "Honoring Women of Strength",
+    subtitle: "Valour",
+    image: "/carousel/img_10.jpg",
+    cta: "See Program",
+    color: "from-amber-800/80",
+  },
+  {
+    id: 11,
+    title: "Capturing the Festival’s Spirit",
+    subtitle: "Heritage",
+    image: "/carousel/img_11.jpg",
+    cta: "View Gallery",
+    color: "from-teal-800/80",
+  },
+  {
+    id: 12,
+    title: "Dignitaries Grace Nwanyị bụ ịfe",
+    subtitle: "Prestige",
+    image: "/carousel/img_12.jpg",
+    cta: "See Program",
+    color: "from-amber-800/80",
+  },
+  {
+    id: 13,
+    title: "Capturing the Festival’s Spirit",
+    subtitle: "Empowerment",
+    image: "/carousel/img_13.jpg",
+    cta: "Learn More",
+    color: "from-purple-900/80",
+  },
+  {
+    id: 14,
+    title: "Tradition Meets Modernity in 2024",
+    subtitle: "Culture",
+    image: "/carousel/img_14.jpg",
+    cta: "See Program",
+    color: "from-amber-800/80",
+  },
+  {
+    id: 15,
+    title: "Memorable Moments at Nwanyị bụ ịfe 2024",
+    subtitle: "Honour",
+    image: "/carousel/img_15.jpg",
+    cta: "View Gallery",
+    color: "from-teal-800/80",
   },
 ];
 
@@ -92,7 +180,7 @@ export default function HeroCarousel() {
               <div className='absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-transparent via-black/20 to-black/60' />
 
               {/* Content */}
-              <div className='absolute inset-0 flex flex-col justify-center items-start text-left text-white px-8 md:px-16 lg:px-24'>
+              <div className='absolute bottom-12 flex flex-col justify-center items-start text-left text-white px-8 md:px-16 lg:px-24'>
                 <div className='max-w-2xl'>
                   {/* Slide counter */}
                   <div className='flex items-center mb-6'>
@@ -105,16 +193,17 @@ export default function HeroCarousel() {
                     </div>
                   </div>
 
-                  <h1 className='text-4xl md:text-[49px] font-bold leading-tight'>
-                    {slide.title}
-                  </h1>
-                  <p className='text-xl md:text-xl mb-4 max-w-xl'>
+                  <p className='text-lg md:text-xl mb-4 max-w-xl text-amber-500'>
                     {slide.subtitle}
                   </p>
-                  <button className='relative overflow-hidden group bg-amber-500 hover:bg-amber-600 text-white font-medium px-8 py-3 rounded-full transition-all duration-500'>
+                  <h1 className='text-3xl sm:text-4xl md:text-[49px] font-bold leading-tight'>
+                    {slide.title}
+                  </h1>
+               
+                  {/* <button className='relative overflow-hidden group bg-amber-500 hover:bg-amber-600 text-white font-medium px-8 py-3 rounded-full transition-all duration-500'>
                     <span className='relative z-10'>{slide.cta}</span>
                     <span className='absolute inset-0 bg-gradient-to-r from-amber-400 to-amber-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500' />
-                  </button>
+                  </button> */}
                 </div>
               </div>
             </div>
@@ -125,12 +214,12 @@ export default function HeroCarousel() {
       {/* Navigation Arrows */}
       <button
         onClick={() => emblaApi && emblaApi.scrollPrev()}
-        className='absolute left-4 bottom-4 md:bottom-auto md:top-1/2 md:-translate-y-1/2 bg-white/10 hover:bg-white/20 backdrop-blur-md text-white p-3 rounded-full z-10 transition-all duration-300 shadow-lg'>
+        className='absolute left-4 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/20 backdrop-blur-md text-white p-3 rounded-full z-10 transition-all duration-300 shadow-lg'>
         <ChevronLeft size={28} strokeWidth={1.5} />
       </button>
       <button
         onClick={() => emblaApi && emblaApi.scrollNext()}
-        className='absolute right-4 bottom-4 md:bottom-auto md:top-1/2 md:-translate-y-1/2 bg-white/10 hover:bg-white/20 backdrop-blur-md text-white p-3 rounded-full z-10 transition-all duration-300 shadow-lg'>
+        className='absolute right-4 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/20 backdrop-blur-md text-white p-3 rounded-full z-10 transition-all duration-300 shadow-lg'>
         <ChevronRight size={28} strokeWidth={1.5} />
       </button>
     </div>

@@ -16,7 +16,7 @@ export default function SectionTitle({
   return (
     <div className={`${centered ? "text-center" : ""}`}>
       <motion.h2
-        className='text-3xl md:text-4xl font-joti font-bold '
+        className='text-3xl md:text-4xl font-joti font-bold text-center'
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
