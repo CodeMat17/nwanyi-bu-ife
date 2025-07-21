@@ -271,7 +271,7 @@ export default function NominationPage() {
         <div className='md:hidden mb-8'>
           <Card className='border-0 shadow-lg'>
             <CardHeader className='  text-amber-600 '>
-              <CardTitle className='text-white text-xl tracking-wide'>
+              <CardTitle className=' text-xl tracking-wide'>
                 Nomination Guidelines
               </CardTitle>
             </CardHeader>
