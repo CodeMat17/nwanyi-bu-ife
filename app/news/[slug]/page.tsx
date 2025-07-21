@@ -7,7 +7,7 @@ import dayjs from "dayjs";
 import { motion, useScroll } from "framer-motion";
 import { ArrowLeft, ArrowRight, Calendar, Eye, Share2 } from "lucide-react";
 import Image from "next/image";
-import { notFound, useRouter } from "next/navigation";
+import { notFound, useParams, useRouter } from "next/navigation";
 
 interface Article {
   id: number;
@@ -208,11 +208,13 @@ const articles: Article[] = [
   },
 ];
 
-export default function ArticlePage({ params }: { params: { slug: string } }) {
+export default function ArticlePage() {
+    const { slug } = useParams() as { slug: string };
+  
   const router = useRouter();
   const { scrollXProgress } = useScroll();
 
-  const article = articles.find((article) => article.slug === params.slug);
+  const article = articles.find((article) => article.slug === slug);
 
   if (!article) {
     return notFound();
