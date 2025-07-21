@@ -47,8 +47,8 @@ export default function ProgramPage() {
               Be Part of This Transformative Experience
             </h2>
             <p className='text-xl max-w-3xl mx-auto mb-10'>
-              Join us at the International Conference Centre, IMT Enugu on
-              November 7, 2024 for a day of empowerment, inspiration, and
+              Join us at the International Conference Centre, Enugu on
+              November 7, 2025 for a day of empowerment, inspiration, and
               celebration of women&apos;s achievements.
             </p>
 

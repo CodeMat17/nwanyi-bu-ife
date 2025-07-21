@@ -3,7 +3,7 @@ import Image from "next/image";
 
 const Loading = () => {
   return (
-    <div className='flex flex-col w-full min-h-screen items-center justify-center'>
+    <div className='flex flex-col w-full py-32 items-center justify-center'>
       <Image
         alt='logo'
         priority

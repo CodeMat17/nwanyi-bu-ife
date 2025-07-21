@@ -184,7 +184,7 @@ export default function ContactPage() {
       </section>
 
       {/* Map Section */}
-      <section className='py-12 px-4 max-w-7xl mx-auto'>
+      {/* <section className='py-12 px-4 max-w-7xl mx-auto'>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -214,7 +214,7 @@ export default function ContactPage() {
             </div>
           </div>
         </motion.div>
-      </section>
+      </section> */}
 
       {/* FAQ Section */}
       <section className='py-16 bg-gradient-to-r from-amber-50 dark:from-amber-950 to-purple-50 dark:to-sky-800'>
@@ -268,11 +268,11 @@ export default function ContactPage() {
             ))}
           </div>
 
-          <div className='text-center mt-12'>
+          {/* <div className='text-center mt-12'>
             <button className='bg-amber-500 hover:bg-amber-600 text-white font-bold px-8 py-3 rounded-full text-lg transition-colors'>
               View Full FAQ
             </button>
-          </div>
+          </div> */}
         </div>
       </section>
 

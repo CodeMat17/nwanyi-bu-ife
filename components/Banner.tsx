@@ -23,7 +23,7 @@ export default function Banner() {
             className='object-cover mr-3'
           />
           <div className='text-center md:text-left mb-4 md:mb-0 max-w-4xl'>
-            <Badge className='bg-amber-500 text-lg rounded-full px-4'>
+            <Badge className='bg-amber-500 text-lg rounded-full px-4 text-white'>
               2025 Theme
             </Badge>
             <h1
