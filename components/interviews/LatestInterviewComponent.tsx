@@ -1,58 +1,44 @@
 "use client";
 
+import { api } from "@/convex/_generated/api";
+import { useQuery } from "convex/react";
 import Link from "next/link";
 import CulturalPattern from "../CulturalPattern";
 import { Button } from "../ui/button";
 import InterviewCard from "./InterviewCard";
 
-interface Interview {
-  id: string;
-  name: string;
-  title: string;
-  excerpt: string;
-  imageUrl: string;
-  slug: string;
-  category: string;
-  interviewDate: string;
-}
-
-const interviews: Interview[] = [
-  {
-    id: "1",
-    name: "Chidimma Okonkwo",
-    title: "The Power of Igbo Women in Cultural Preservation",
-    excerpt:
-      "Chidimma discusses the vital role of women in preserving Igbo cultural heritage through festivals.",
-    imageUrl: "/carousel/img_5.jpg",
-    slug: "chidimma-okonkwo",
-    category: "Culture",
-    interviewDate: "2023-10-15",
-  },
-  {
-    id: "2",
-    name: "Adaobi Nwafor",
-    title: "Reviving Traditional Igbo Weaving Techniques",
-    excerpt:
-      "Adaobi shares her journey in preserving and modernizing ancient Igbo textile arts.",
-    imageUrl: "/carousel/img_6.jpg",
-    slug: "adaobi-nwafor",
-    category: "Art",
-    interviewDate: "2023-09-18",
-  },
-  {
-    id: "3",
-    name: "Nneka Eze",
-    title: "Igbo Women in Contemporary Politics",
-    excerpt:
-      "Nneka discusses the challenges and opportunities for Igbo women in modern political leadership.",
-    imageUrl: "/carousel/img_7.jpg",
-    slug: "nneka-eze",
-    category: "Politics",
-    interviewDate: "2023-11-12",
-  },
-];
-
 const LatestInterviewComponent = () => {
+  const interviews = useQuery(api.interviews.latestInterviews);
+
+  if (interviews === undefined) {
+    return (
+      <div className='flex gap-6 overflow-x-auto pb-4'>
+        {[...Array(3)].map((_, i) => (
+          <div
+            key={i}
+            className='min-w-[300px] bg-gray-100 dark:bg-gray-800 rounded-xl p-4 animate-pulse'>
+            <div className='h-48 bg-gray-200 dark:bg-gray-700 rounded-lg mb-4'></div>
+            <div className='h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-2'></div>
+            <div className='h-6 bg-gray-200 dark:bg-gray-700 rounded w-full mb-3'></div>
+            <div className='h-3 bg-gray-200 dark:bg-gray-700 rounded w-full mb-1'></div>
+            <div className='h-3 bg-gray-200 dark:bg-gray-700 rounded w-5/6'></div>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  if (interviews.length === 0) { 
+      <div className='container mx-auto px-4 text-center'>
+        <h2 className='text-3xl md:text-4xl font-bold font-playfair text-gray-900 dark:text-white'>
+          No Interviews Found
+        </h2>
+        <p className='text-gray-600 dark:text-gray-300 mt-4 max-w-xl mx-auto'>
+          Check back later for new interviews
+        </p>
+      </div>;
+  }
+
   return (
     <div className='py-16 dark:to-gray-800 relative'>
       <CulturalPattern />

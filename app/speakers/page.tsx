@@ -5,10 +5,6 @@ import GlowingBanner from "@/components/GlowingBanner";
 import Speakers from "@/components/program/Speakers";
 import { motion } from "framer-motion";
 import { Calendar, MapPin, Mic } from "lucide-react";
-import EventSchedule from "../../components/program/EventSchedule";
-import Awards from "../../components/program/Awards";
-
-// Award categories and recipients
 
 
 export default function ProgramPage() {
@@ -18,18 +14,15 @@ export default function ProgramPage() {
 
       {/* Glowing Banner */}
       <GlowingBanner
-        title='2025 Festival Program'
+        title='2025 Festival Speakers'
         subtitle='Venue | International Conference Centre, Enugu'
       />
 
-      {/* Schedule Section */}
-      <EventSchedule />
-
+   
       {/* Speakers Section */}
       <Speakers />
 
-      {/* Awards Section */}
-     <Awards />
+  
 
       {/* CTA Section */}
       <section className='py-20 bg-gradient-to-r from-sky-800 to-sky-600 text-white'>
@@ -44,13 +37,13 @@ export default function ProgramPage() {
             </div>
 
             <h2 className='text-3xl md:text-4xl font-bold mb-6'>
-              Be Part of This Transformative Experience
+              Be Part of &apos;Nwanyị bụ ịfe&apos; Transformative Experience
             </h2>
-            <p className='text-xl max-w-3xl mx-auto mb-10'>
-              Join us at the International Conference Centre, Enugu on
-              November 7, 2025 for a day of empowerment, inspiration, and
-              celebration of women&apos;s achievements.
-            </p>
+            {/* <p className='text-xl max-w-3xl mx-auto mb-10'>
+              Join us at the International Conference Centre, Enugu on November
+              7, 2025 for a day of empowerment, inspiration, and celebration of
+              women&apos;s achievements.
+            </p> */}
 
             <div className='flex flex-wrap justify-center gap-6 mb-12'>
               <div className='flex items-center bg-white/10 px-6 py-3 rounded-full'>

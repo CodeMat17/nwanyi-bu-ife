@@ -1,272 +1,236 @@
-// src/app/gallery/page.tsx
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { X, ArrowLeft, ArrowRight } from "lucide-react";
-import { useState } from "react";
 import Image from "next/image";
 import GlowingBanner from "@/components/GlowingBanner";
 import CulturalPattern from "@/components/CulturalPattern";
-
-interface FestivalImage {
-  id: string;
-  src: string;
-  alt: string;
-  year: string;
-}
-
-interface FestivalYear {
-  year: string;
-  theme: string;
-  themeDescription: string;
-}
-
-const festivalYears: FestivalYear[] = [
-  {
-    year: "2025",
-    theme: "COMING SOON!",
-    themeDescription:
-      "Celebrating the foundational role of women in sustaining Igbo culture and traditions",
-  },
-  {
-    year: "2024",
-    theme: "A Woman And Her Dream: Where Are Our Women?",
-    themeDescription:
-      "Women's aspirations and the pursuit of future possibilities in Igbo land",
-  },
-];
-
-const festivalImages: FestivalImage[] = Array.from({ length: 15 }, (_, i) => ({
-  id: `img_${i + 1}`,
-  src: `/carousel/img_${i + 1}.jpg`,
-  alt: `Nwanyị bụ Ịfe Festival ${i % 2 === 0 ? "2025" : "2024"} moment ${
-    i + 1
-  }`,
-  year: i % 2 === 0 ? "2025" : "2024",
-}));
+import { useEffect, useState, useRef } from "react";
+import { useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
 
 export default function GalleryPage() {
-  const [selectedYear, setSelectedYear] = useState<string>("2025");
-  const [selectedImage, setSelectedImage] = useState<FestivalImage | null>(
-    null
-  );
+  const galleryImages = useQuery(api.gallery.getAll);
+  const [centerImageIndex, setCenterImageIndex] = useState<number>(0);
+  const [isMobile, setIsMobile] = useState<boolean>(false);
+  const [isTransitioning, setIsTransitioning] = useState<boolean>(false);
+  const thumbnailsRef = useRef<HTMLDivElement>(null);
+  const autoRotateTimer = useRef<NodeJS.Timeout | null>(null);
 
-  const currentYearData =
-    festivalYears.find((year) => year.year === selectedYear) ||
-    festivalYears[0];
-  const filteredImages = festivalImages.filter(
-    (img) => img.year === selectedYear
-  );
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsMobile(window.innerWidth < 1024);
+    };
 
-  const openLightbox = (image: FestivalImage) => {
-    setSelectedImage(image);
-    document.body.style.overflow = "hidden";
-  };
+    checkScreenSize();
+    window.addEventListener("resize", checkScreenSize);
+    return () => window.removeEventListener("resize", checkScreenSize);
+  }, []);
 
-  const closeLightbox = () => {
-    setSelectedImage(null);
-    document.body.style.overflow = "auto";
-  };
+  const navigateImage = (index: number) => {
+    if (!galleryImages || index === centerImageIndex || isTransitioning) return;
 
-  const navigateImage = (direction: "prev" | "next") => {
-    if (!selectedImage) return;
+    setIsTransitioning(true);
+    setCenterImageIndex(index);
 
-    const currentIndex = filteredImages.findIndex(
-      (img) => img.id === selectedImage.id
-    );
-    let newIndex = 0;
-
-    if (direction === "next") {
-      newIndex = (currentIndex + 1) % filteredImages.length;
-    } else {
-      newIndex =
-        (currentIndex - 1 + filteredImages.length) % filteredImages.length;
+    if (autoRotateTimer.current) {
+      clearInterval(autoRotateTimer.current);
     }
+    startAutoRotate();
 
-    setSelectedImage(filteredImages[newIndex]);
+    if (isMobile && thumbnailsRef.current) {
+      const thumbnail = thumbnailsRef.current.children[index] as HTMLElement;
+      if (thumbnail) {
+        thumbnailsRef.current.scrollTo({
+          left:
+            thumbnail.offsetLeft -
+            thumbnailsRef.current.offsetWidth / 2 +
+            thumbnail.offsetWidth / 2,
+          behavior: "smooth",
+        });
+      }
+    }
   };
+
+  const startAutoRotate = () => {
+    if (!galleryImages || galleryImages.length === 0) return;
+
+    autoRotateTimer.current = setInterval(() => {
+      setIsTransitioning(true);
+      setCenterImageIndex((prev) => (prev + 1) % galleryImages.length);
+    }, 5000);
+  };
+
+  useEffect(() => {
+    if (galleryImages && galleryImages.length > 0) {
+      startAutoRotate();
+    }
+    return () => {
+      if (autoRotateTimer.current) {
+        clearInterval(autoRotateTimer.current);
+      }
+    };
+  }, [galleryImages]);
+
+  if (!galleryImages) {
+    return <div className="text-center py-64">Loading gallery...</div>;
+  }
 
   return (
-    <div className='min-h-screen '>
+    <div className='min-h-screen relative overflow-x-hidden'>
       <CulturalPattern />
       <GlowingBanner
         title='Festival Gallery'
         subtitle='Immerse yourself in the vibrant moments of Nwanyị bụ Ịfe'
-     
       />
 
-      {/* Year Selection with Theme Display */}
-      <div className='py-8 bg-white/20 shadow-lg'>
-        <div className='max-w-7xl mx-auto px-4'>
-          <div className='flex justify-center gap-4 mb-6'>
-            {festivalYears.map((yearData) => (
-              <motion.button
-                key={yearData.year}
-                className={`px-6 py-3 rounded-full font-medium transition-colors ${
-                  selectedYear === yearData.year
-                    ? "bg-amber-600 text-white shadow-lg"
-                    : "bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600"
-                }`}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setSelectedYear(yearData.year)}>
-                {yearData.year} Festival
-              </motion.button>
-            ))}
-          </div>
-
-          {/* Year Theme Display */}
-          <motion.div
-            className='text-center '
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}>
-            <h3 className='text-xl font-bold text-amber-800 dark:text-amber-300'>
-              {currentYearData.theme}
-            </h3>
-          
-          </motion.div>
-        </div>
+      <div className='py-8 text-center px-4 text-4xl font-semibold'>
+        Festival Memories
       </div>
 
-      {/* Gallery Grid */}
-      <div className='py-12 px-4 max-w-7xl mx-auto'>
-        <motion.div
-          className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6'
-          layout>
-          {filteredImages.map((image, index) => (
-            <motion.div
-              key={image.id}
-              className='relative group overflow-hidden rounded-2xl cursor-pointer shadow-lg hover:shadow-xl transition-all duration-300'
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              onClick={() => openLightbox(image)}
-              whileHover={{ scale: 1.02 }}>
-              <div className='aspect-square relative'>
-                <Image
-                  src={image.src}
-                  alt={image.alt}
-                  fill
-                  className='object-cover transition-transform duration-500 group-hover:scale-110'
-                  sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
-                  quality={90}
-                  priority={index < 8}
-                />
+      {galleryImages.length > 0 ? (
+        <div className='pt-4 md:pt-8 w-full max-w-7xl mx-auto px-4'>
+          {isMobile ? (
+            <div className='flex flex-col items-center gap-6'>
+              <div className='w-full max-w-[350px] aspect-square relative'>
+                <AnimatePresence
+                  mode='wait'
+                  onExitComplete={() => setIsTransitioning(false)}>
+                  <motion.div
+                    key={galleryImages[centerImageIndex]?._id || "empty"}
+                    className='w-full h-full rounded-xl overflow-hidden shadow-xl absolute'
+                    initial={{ scale: 0.95, opacity: 0 }}
+                    animate={{
+                      scale: 1,
+                      opacity: 1,
+                      boxShadow: "0 0 20px rgba(245, 158, 11, 0.4)",
+                    }}
+                    exit={{ scale: 0.95, opacity: 0 }}
+                    transition={{ duration: 0.5, ease: "easeInOut" }}>
+                    {galleryImages[centerImageIndex] && (
+                      <Image
+                        src={galleryImages[centerImageIndex].image}
+                        alt={`Festival image ${centerImageIndex + 1}`}
+                        fill
+                        className='object-cover'
+                        quality={100}
+                        priority
+                      />
+                    )}
+                  </motion.div>
+                </AnimatePresence>
               </div>
-              <div className='absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4'>
-                <p className='text-white text-sm font-medium'>View Details</p>
-              </div>
-            </motion.div>
-          ))}
-        </motion.div>
-      </div>
 
-      {/* Perfectly Centered Lightbox Modal */}
-      <AnimatePresence>
-        {selectedImage && (
-          <motion.div
-            className='fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4'
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={closeLightbox}>
-            <div className='absolute inset-0 flex items-center justify-center'>
-              {/* Modal Container */}
-              <motion.div
-                className='relative w-full max-w-4xl mx-8 my-8 flex flex-col items-center'
-                initial={{ scale: 0.95, opacity: 0, y: 20 }}
-                animate={{ scale: 1, opacity: 1, y: 0 }}
-                exit={{ scale: 0.95, opacity: 0, y: 20 }}
-                transition={{ type: "spring", damping: 25, stiffness: 100 }}
-                onClick={(e) => e.stopPropagation()}>
-                {/* Close Button */}
-                <button
-                  className='absolute -top-12 right-0 text-white p-2 rounded-full hover:bg-white/10 transition-colors z-10'
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    closeLightbox();
-                  }}>
-                  <X size={32} />
-                </button>
-
-                {/* Image Container */}
-                <div className='relative w-full aspect-square max-h-[70vh] bg-gray-800 rounded-2xl overflow-hidden shadow-2xl border-2 border-amber-400/30'>
-                  {/* Navigation Arrows */}
-                  <button
-                    className='absolute left-4 top-1/2 -translate-y-1/2 text-white p-2 rounded-full hover:bg-white/10 transition-colors z-10'
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      navigateImage("prev");
-                    }}>
-                    <ArrowLeft size={28} />
-                  </button>
-
-                  <button
-                    className='absolute right-4 top-1/2 -translate-y-1/2 text-white p-2 rounded-full hover:bg-white/10 transition-colors z-10'
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      navigateImage("next");
-                    }}>
-                    <ArrowRight size={28} />
-                  </button>
-
-                  {/* The Image */}
-                  <Image
-                    src={selectedImage.src}
-                    alt={selectedImage.alt}
-                    fill
-                    className='object-contain'
-                    quality={100}
-                    priority
-                  />
-
-                  {/* Decorative Corner Elements */}
-                  <div className='absolute top-4 left-4 w-8 h-8 border-t-2 border-l-2 border-amber-400 rounded-tl-lg'></div>
-                  <div className='absolute top-4 right-4 w-8 h-8 border-t-2 border-r-2 border-amber-400 rounded-tr-lg'></div>
-                  <div className='absolute bottom-4 left-4 w-8 h-8 border-b-2 border-l-2 border-amber-400 rounded-bl-lg'></div>
-                  <div className='absolute bottom-4 right-4 w-8 h-8 border-b-2 border-r-2 border-amber-400 rounded-br-lg'></div>
+              <div
+                ref={thumbnailsRef}
+                className='w-full overflow-x-auto pb-4 hide-scrollbar'
+                style={{ scrollbarWidth: "none" }}>
+                <div className='flex gap-3 px-2 w-max'>
+                  {galleryImages.map((image, index) => (
+                    <motion.div
+                      key={image._id}
+                      className={`w-20 h-20 rounded-lg overflow-hidden cursor-pointer shrink-0 relative ${
+                        index === centerImageIndex
+                          ? "ring-4 ring-amber-500"
+                          : "border-2 border-amber-300"
+                      }`}
+                      whileHover={{ scale: 0.95 }}
+                      onClick={() => navigateImage(index)}>
+                      <Image
+                        src={image.image}
+                        alt={`Festival thumbnail ${index + 1}`}
+                        fill
+                        className='object-cover'
+                        quality={80}
+                      />
+                    </motion.div>
+                  ))}
                 </div>
-
-                {/* Caption Area */}
-                {/* <div className='w-full max-w-2xl mt-4 p-4 bg-white/10 backdrop-blur-sm rounded-lg border border-white/10'>
-                  <p className='text-white font-medium text-center'>
-                    {selectedImage.alt}
-                  </p>
-                  <div className='flex justify-between items-center mt-2 text-white/80 text-sm'>
-                    <span>{selectedImage.year} Festival</span>
-                    <span>
-                      {filteredImages.findIndex(
-                        (img) => img.id === selectedImage.id
-                      ) + 1}{" "}
-                      / {filteredImages.length}
-                    </span>
-                  </div>
-                </div> */}
-              </motion.div>
+              </div>
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          ) : (
+            <div className='grid grid-cols-1 lg:grid-cols-2 gap-8 items-center'>
+              <div className='flex justify-center lg:justify-end'>
+                <div className='w-full max-w-[450px] aspect-square relative'>
+                  <AnimatePresence
+                    mode='wait'
+                    onExitComplete={() => setIsTransitioning(false)}>
+                    <motion.div
+                      key={galleryImages[centerImageIndex]?._id || "empty"}
+                      className='w-full h-full rounded-xl overflow-hidden shadow-xl absolute'
+                      initial={{ scale: 0.95, opacity: 0 }}
+                      animate={{
+                        scale: 1,
+                        opacity: 1,
+                        boxShadow: "0 0 20px rgba(245, 158, 11, 0.4)",
+                      }}
+                      exit={{ scale: 0.95, opacity: 0 }}
+                      transition={{ duration: 0.5, ease: "easeInOut" }}>
+                      {galleryImages[centerImageIndex] && (
+                        <Image
+                          src={galleryImages[centerImageIndex].image}
+                          alt={`Festival image ${centerImageIndex + 1}`}
+                          fill
+                          className='object-cover'
+                          quality={100}
+                          priority
+                        />
+                      )}
+                    </motion.div>
+                  </AnimatePresence>
+                </div>
+              </div>
 
-      {/* Call to Action */}
-      {/* <div className='py-20 bg-gradient-to-r from-amber-500 to-purple-600 text-center'>
-        <div className='max-w-4xl mx-auto px-4'>
-          <h2 className='text-3xl md:text-4xl font-bold text-white mb-6'>
-            Become Part of Our Story
-          </h2>
-          <p className='text-xl text-amber-100 mb-8'>
-            Share your festival moments with #NwanyiBuIfe for a chance to be
-            featured
-          </p>
-          <motion.button
-            className='bg-white text-amber-700 font-bold px-8 py-3 rounded-full hover:bg-gray-100 transition-colors shadow-lg'
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}>
-            Join the Celebration
-          </motion.button>
+              <div className='grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3'>
+                {galleryImages.map((image, index) => (
+                  <motion.div
+                    key={image._id}
+                    className={`aspect-square rounded-lg overflow-hidden cursor-pointer relative ${
+                      index === centerImageIndex
+                        ? "ring-4 ring-amber-500"
+                        : "border-2 border-amber-300"
+                    }`}
+                    whileHover={{ scale: 0.95 }}
+                    onClick={() => navigateImage(index)}>
+                    <Image
+                      src={image.image}
+                      alt={`Festival thumbnail ${index + 1}`}
+                      fill
+                      className='object-cover'
+                      quality={80}
+                    />
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
-      </div> */}
+      ) : (
+        <div className='text-center py-12'>No images found in the gallery</div>
+      )}
+
+      {galleryImages.length > 0 && (
+        <div className='pb-12 px-4 lg:pt-4 max-w-4xl mx-auto'>
+          <AnimatePresence mode='wait'>
+            <motion.div
+              key={galleryImages[centerImageIndex]?._id || "empty"}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.3 }}
+              className='text-center'>
+              <p className='text-sm'>
+                Photo {centerImageIndex + 1} of {galleryImages.length}
+              </p>
+            </motion.div>
+          </AnimatePresence>
+        </div>
+      )}
+
+      <style jsx>{`
+        .hide-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+      `}</style>
     </div>
   );
 }

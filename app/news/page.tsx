@@ -1,332 +1,372 @@
-// src/app/news/page.tsx
 "use client";
 
 import CulturalPattern from "@/components/CulturalPattern";
 import { motion } from "framer-motion";
-import { useState } from "react";
-import { Calendar, Tag, Search, ArrowRight, MousePointerClick } from "lucide-react";
+import { useState, useEffect } from "react";
+import {
+  Calendar,
+  Tag,
+  Search,
+  ArrowRight,
+  MousePointerClick,
+  PenTool,
+} from "lucide-react";
 import GlowingBanner from "@/components/GlowingBanner";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
+import { Doc } from "@/convex/_generated/dataModel";
+import dayjs from "dayjs";
+import { ShareButton } from "@/components/ShareButton";
 
-// Article data type
-type Article = {
-  id: number;
-  title: string;
-  excerpt: string;
-  date: string;
-  readTime: string;
-  category: string;
-  image: string;
-  featured?: boolean;
-  slug: string;
-};
+type Article = Doc<"news">;
+type Category =
+  | "All"
+  | "Festival Updates"
+  | "Cultural Stories"
+  | "Women Empowerment"
+  | "Entrepreneurship"
+  | "Education"
+  | "Trailblazers";
 
-// Category type
-// type Category = {
-//   id: string;
-//   name: string;
-// };
-
-// Article data
-const articles: Article[] = [
-  {
-    id: 1,
-    title: "2025 Festival Theme Announcement: 'A Woman and Her Dream'",
-    excerpt:
-      "Discover the profound meaning behind our 2025 festival theme and how it addresses the critical question 'Where Are Our Women?' in leadership spaces.",
-    date: "June 15, 2025",
-    readTime: "4 min",
-    category: "Festival Updates",
-    image: "/carousel/img_15.jpg",
-    featured: true,
-    slug: "2025-festival-theme-announcement",
-  },
-  {
-    id: 2,
-    title: "Meet the Trailblazing Women Receiving Nwanyị bụ Ife Awards",
-    excerpt:
-      "Get to know the extraordinary women being honored at this year's festival for their groundbreaking work in technology, cultural preservation, and social justice.",
-    date: "May 28, 2025",
-    readTime: "6 min",
-    category: "Awards",
-    image: "/carousel/img_14.jpg",
-    slug: "meet-the-trailblazing-women-receiving-nwanyi-bu-ife-awards",
-  },
-  {
-    id: 3,
-    title: "Preserving Igbo Textile Traditions: The Women Weavers of Nsukka",
-    excerpt:
-      "How a collective of women artisans are reviving ancient weaving techniques while creating economic opportunities in rural communities.",
-    date: "May 20, 2025",
-    readTime: "8 min",
-    category: "Cultural Heritage",
-    image: "/carousel/img_13.jpg",
-    slug: "preserving-igbo-textile-traditions-the-women-weavers-of-nsukka",
-  },
-  {
-    id: 4,
-    title: "Early Bird Registration Opens with Special Discounts",
-    excerpt:
-      "Secure your spot at the 2025 festival with 20% off early bird pricing. Limited tickets available for our most transformative event yet.",
-    date: "May 5, 2025",
-    readTime: "3 min",
-    category: "Festival Updates",
-    image: "/carousel/img_12.jpg",
-    slug: "early-bird-registration-opens-with-special-discounts",
-  },
-  {
-    id: 5,
-    title:
-      "From Classroom to Boardroom: Education's Role in Women's Empowerment",
-    excerpt:
-      "An in-depth analysis of how access to education continues to shape women's leadership trajectories across Africa.",
-    date: "April 30, 2025",
-    readTime: "10 min",
-    category: "Women Empowerment",
-    image: "/carousel/img_11.jpg",
-    slug: "from-classroom-to-boardroom-educations-role-in-womens-empowerment",
-  },
-  {
-    id: 6,
-    title:
-      "The Resurgence of Igbo Women's Council Systems in Modern Governance",
-    excerpt:
-      "Exploring how traditional women's leadership structures are informing contemporary approaches to community development.",
-    date: "April 18, 2025",
-    readTime: "7 min",
-    category: "Cultural Heritage",
-    image: "/carousel/img_10.jpg",
-    slug: "the-resurgence-of-igbo-womens-council-systems-in-modern-governance",
-  },
-  {
-    id: 7,
-    title: "Tech Innovation Workshop: Bridging the Gender Gap in STEM",
-    excerpt:
-      "How our hands-on technology workshop is equipping women with digital skills for the future economy.",
-    date: "April 10, 2025",
-    readTime: "5 min",
-    category: "Festival Program",
-    image: "/carousel/img_9.jpg",
-    slug: "tech-innovation-workshop-bridging-the-gender-gap-in-stem",
-  },
-  {
-    id: 8,
-    title:
-      "Nwanyị bụ Ife Festival Partners with UN Women for Global Initiative",
-    excerpt:
-      "Announcing our new partnership to scale women's empowerment programs across West Africa.",
-    date: "March 28, 2025",
-    readTime: "4 min",
-    category: "Partnerships",
-    image: "/carousel/img_8.jpg",
-    slug: "nwanyi-bu-ife-festival-partners-with-un-women-for-global-initiative",
-  },
-];
-
-// Categories
-// const categories: Category[] = [
-//   { id: "all", name: "All Articles" },
-//   { id: "Festival Updates", name: "Festival Updates" },
-//   { id: "Women Empowerment", name: "Women Empowerment" },
-//   { id: "Cultural Heritage", name: "Cultural Heritage" },
-//   { id: "Awards", name: "Awards & Honors" },
-//   { id: "Festival Program", name: "Festival Program" },
-// ];
-
-// Popular tags
-const popularTags = [
-  "WomenInLeadership",
-  "IgboCulture",
-  "GenderEquality",
-  "Empowerment",
-  "CulturalPreservation",
+const categories: Category[] = [
+  "All",
+  "Festival Updates",
+  "Cultural Stories",
+  "Women Empowerment",
   "Entrepreneurship",
   "Education",
   "Trailblazers",
 ];
 
+const ArticleSkeleton = () => (
+  <div className='bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700'>
+    <div className='relative h-64 lg:h-48 bg-gradient-to-r from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-600 animate-pulse rounded-t-2xl'></div>
+    <div className='p-6 space-y-4'>
+      <div className='flex items-center space-x-4'>
+        <div className='h-4 w-20 bg-gray-200 dark:bg-gray-600 rounded-full animate-pulse'></div>
+        <div className='h-4 w-16 bg-gray-200 dark:bg-gray-600 rounded-full animate-pulse'></div>
+      </div>
+      <div className='h-6 w-full bg-gray-200 dark:bg-gray-600 rounded animate-pulse'></div>
+      <div className='h-4 w-full bg-gray-200 dark:bg-gray-600 rounded animate-pulse'></div>
+      <div className='h-4 w-3/4 bg-gray-200 dark:bg-gray-600 rounded animate-pulse'></div>
+      <div className='h-10 w-32 bg-gray-200 dark:bg-gray-600 rounded-full animate-pulse mt-4'></div>
+    </div>
+  </div>
+);
+
+interface ArticleCardProps {
+  article: Article;
+  index: number;
+  isFeatured?: boolean;
+}
+
+const ArticleCard = ({
+  article,
+  index,
+  isFeatured = false,
+}: ArticleCardProps) => (
+  <motion.div
+    className={`group bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 border ${
+      isFeatured
+        ? "border-amber-300 dark:border-amber-500"
+        : "border-gray-100 dark:border-gray-700"
+    }`}
+    initial={{ y: 30, opacity: 0 }}
+    animate={{ y: 0, opacity: 1 }}
+    transition={{ duration: 0.5, delay: index * 0.1 }}
+    whileHover={{ y: -5 }}>
+    <div className='relative h-64 sm:h-48'>
+      <Image
+        alt={article.title}
+        fill
+        src={article.image}
+        className='object-cover transition-transform duration-500 group-hover:scale-105'
+        sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
+        priority={isFeatured}
+      />
+      {isFeatured && (
+        <div className='absolute top-4 left-4 bg-amber-500 text-white px-3 py-1 rounded-full text-sm flex items-center z-10'>
+          <span className='mr-1'>✨</span> Featured
+        </div>
+      )}
+      <div className='absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent' />
+      <div className='absolute top-4 left-4 bg-amber-500 text-white px-3 py-1 rounded-full text-sm flex items-center'>
+        <Tag className='h-3 w-3 mr-1' />
+        {article.category}
+      </div>
+    </div>
+    <div className='px-6 py-3'>
+      <div className='flex items-center text-muted-foreground text-sm mb-2'>
+        <Calendar className='h-4 w-4 mr-1' />
+        <span>{dayjs(article.date).format("MMM D, YYYY")}</span>
+      </div>
+
+      <h3 className='text-xl font-semibold mb-1 group-hover:text-amber-600 dark:group-hover:text-amber-400 line-clamp-2 transition-colors'>
+        {article.title}
+      </h3>
+      <p className='text-muted-foreground mb-4 line-clamp-2'>
+        {article.excerpt}
+      </p>
+      <div className='flex items-center justify-between'>
+        <Button
+          asChild
+          size={"sm"}
+          variant={"outline"}
+          className='border-amber-500 text-amber-500 group-hover:bg-amber-500 group-hover:text-white'>
+          <Link href={`/news/${article.slug}`}>
+            Read
+            <MousePointerClick className='h-4 w-4 ml-1 transition-transform duration-500 group-hover:ml-3 group-hover:rotate-90 group-hover:scale-200' />
+          </Link>
+        </Button>
+        <ShareButton
+          path={`/news/${article.slug}`}
+          title={article.title || ""}
+          description={article.excerpt || ""}
+      
+        />
+      </div>
+    </div>
+  </motion.div>
+);
+
+interface NoResultsProps {
+  resetFilters: () => void;
+}
+
+const NoResults = ({ resetFilters }: NoResultsProps) => (
+  <div className='text-center py-16'>
+    <div className='w-24 h-24 mx-auto bg-amber-100 dark:bg-amber-900 rounded-full flex items-center justify-center mb-6'>
+      <Search className='h-10 w-10 text-amber-600 dark:text-amber-400' />
+    </div>
+    <h3 className='text-2xl font-bold mb-4'>No articles found</h3>
+    <p className='text-gray-600 dark:text-gray-400 max-w-md mx-auto'>
+      Try adjusting your search or filter criteria.
+    </p>
+    <Button
+      variant='outline'
+      className='mt-6 border-amber-500 text-amber-500 hover:bg-amber-50 dark:hover:bg-amber-900/30'
+      onClick={resetFilters}>
+      Reset Filters
+    </Button>
+  </div>
+);
+
 export default function NewsPage() {
-  const [selectedCategory] = useState<string>("all");
-  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [selectedCategory, setSelectedCategory] = useState<Category>("All");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedQuery, setDebouncedQuery] = useState("");
 
-  // Filter articles based on category and search query
-  const filteredArticles = articles.filter((article) => {
-    const matchesCategory =
-      selectedCategory === "all" || article.category === selectedCategory;
-    const matchesSearch =
-      article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      article.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesCategory && matchesSearch;
-  });
+  // Fetch data separately
+  const featuredArticle = useQuery(api.news.getFeatured);
+  const allArticles = useQuery(api.news.getNonFeatured);
+  const displayArticle = featuredArticle || allArticles?.[0];
 
-  // Featured article (first featured or first article)
-  const featuredArticle =
-    articles.find((article) => article.featured) || articles[0];
+  // Debounce search input
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedQuery(searchQuery);
+    }, 300);
 
-  // Other articles (excluding featured)
-  const otherArticles = filteredArticles.filter(
-    (article) => article.id !== featuredArticle.id
-  );
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
+  // Filter articles
+  const filteredArticles =
+    allArticles?.filter((article) => {
+      const matchesCategory =
+        selectedCategory === "All" || article.category === selectedCategory;
+      if (!debouncedQuery) return matchesCategory;
+
+      const query = debouncedQuery.toLowerCase();
+      return (
+        matchesCategory &&
+        (article.title.toLowerCase().includes(query) ||
+          article.excerpt.toLowerCase().includes(query) ||
+          article.content.toLowerCase().includes(query))
+      );
+    }) || [];
+
+  // Loading state
+  if (featuredArticle === undefined || allArticles === undefined) {
+    return (
+      <div className='relative overflow-hidden'>
+        <CulturalPattern />
+        <GlowingBanner
+          title='News & Stories'
+          subtitle='Empowering narratives, festival updates, and cultural insights'
+        />
+
+        <section className='py-16 px-4 max-w-7xl mx-auto'>
+          <div className='grid grid-cols-1 md:grid-cols-2 gap-12 items-center'>
+            <div className='relative rounded-2xl overflow-hidden aspect-video w-full md:max-w-xl mx-auto h-96 bg-gradient-to-r from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-600 animate-pulse'></div>
+            <div className='space-y-4'>
+              <div className='h-6 w-24 bg-gray-200 dark:bg-gray-600 rounded-full animate-pulse'></div>
+              <div className='h-8 w-full bg-gray-200 dark:bg-gray-600 rounded animate-pulse'></div>
+              <div className='h-4 w-full bg-gray-200 dark:bg-gray-600 rounded animate-pulse'></div>
+              <div className='h-4 w-3/4 bg-gray-200 dark:bg-gray-600 rounded animate-pulse'></div>
+              <div className='h-10 w-32 bg-gray-200 dark:bg-gray-600 rounded-full animate-pulse mt-6'></div>
+            </div>
+          </div>
+        </section>
+
+        <div className='max-w-7xl mx-auto px-4 pb-20 grid grid-cols-1 lg:grid-cols-4 gap-8'>
+          <div className='lg:col-span-3'>
+            <div className='relative mb-12'>
+              <div className='w-full h-12 bg-gray-200 dark:bg-gray-600 rounded-full animate-pulse'></div>
+            </div>
+            <div className='grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6'>
+              {[...Array(6)].map((_, i) => (
+                <ArticleSkeleton key={i} />
+              ))}
+            </div>
+          </div>
+          <div className='space-y-8'>
+            <div className='bg-gradient-to-br from-sky-800 to-purple-600 rounded-2xl p-6 h-64 animate-pulse'></div>
+            <div className='bg-white dark:bg-gray-700 rounded-2xl p-6 shadow-lg h-64 animate-pulse'></div>
+            <div className='bg-white dark:bg-gray-700 rounded-2xl p-6 shadow-lg h-64 animate-pulse'></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className='relative overflow-hidden'>
       <CulturalPattern />
-
-      {/* Glowing Banner */}
       <GlowingBanner
         title='News & Stories'
         subtitle='Empowering narratives, festival updates, and cultural insights'
       />
 
       {/* Featured Article */}
-      <section className='py-16 px-4 max-w-7xl mx-auto'>
-        <motion.div
-          className='grid grid-cols-1 md:grid-cols-2 gap-12 items-center'
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8 }}>
-          <div className='relative rounded-2xl overflow-hidden aspect-video w-full md:max-w-xl mx-auto h-96'>
-            <Image
-              src={featuredArticle.image}
-              alt={featuredArticle.title}
-              fill
-              className='object-cover'
-              priority
-            />
-            <div className='absolute top-4 left-4 bg-amber-500 text-white px-4 py-1 rounded-full font-bold'>
-              Featured Story
+      {displayArticle && (
+        <section className='py-16 px-4 max-w-7xl mx-auto'>
+          <motion.div
+            className='grid grid-cols-1 md:grid-cols-2 gap-12 items-center'
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}>
+            <div className='relative rounded-2xl overflow-hidden aspect-video w-full md:max-w-xl mx-auto h-96 shadow-2xl'>
+              <Image
+                src={displayArticle.image}
+                alt={displayArticle.title}
+                fill
+                className='object-cover transition-transform duration-700 group-hover:scale-105'
+                priority
+                sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
+              />
+              <div className='absolute inset-0 bg-gradient-to-t from-black/60 to-transparent'></div>
+              {featuredArticle && (
+                <div className='absolute top-4 left-4 bg-amber-500 text-white px-4 py-1 rounded-full font-bold flex items-center z-10'>
+                  <span className='mr-1'>🌟</span> Featured Story
+                </div>
+              )}
             </div>
-          </div>
 
-          <div>
-            <div className='flex items-center text-amber-600 mb-4'>
-              <span className='bg-amber-100 px-3 py-1 rounded-full text-sm font-medium'>
-                {featuredArticle.category}
-              </span>
-              <div className='flex items-center ml-4'>
-                <Calendar className='h-4 w-4 mr-1' />
-                <span className='text-sm'>{featuredArticle.date}</span>
+            <div>
+              <div className='flex items-center space-x-4 mb-4'>
+                <span className='bg-amber-100 dark:bg-amber-900 text-amber-800 dark:text-amber-100 px-3 py-1 rounded-full text-sm font-medium'>
+                  {displayArticle.category}
+                </span>
+                <div className='flex items-center text-muted-foreground'>
+                  <Calendar className='h-4 w-4 mr-1' />
+                  <span className='text-sm'>
+                    {dayjs(displayArticle.date).format("MMM D, YYYY")}
+                  </span>
+                </div>
+                <div>
+                  <ShareButton
+                   path={`/news/${displayArticle.slug}`}
+                   title={displayArticle.title || ""}
+                   description={displayArticle.excerpt || ""} showText 
+                  />
+                </div>
+              </div>
+
+             
+              <h2 className="mb-4 text-3xl lg:text-4xl font-bold line-clamp-2 hover:text-[#f59e0b]"> {displayArticle.title}</h2>
+              <p className='text-lg text-muted-foreground mb-6 line-clamp-4'>
+                {displayArticle.excerpt}
+              </p>
+              <div className='flex items-center space-x-4'>
+                <Link
+                  href={`/news/${displayArticle.slug}`}
+                  className='flex items-center text-sky-600 dark:text-sky-400 font-bold group'>
+                  Read Full Article
+                  <ArrowRight className='h-5 w-5 ml-2 transition-transform group-hover:translate-x-1' />
+                </Link>
+                <span className='text-muted-foreground hidden sm:inline'>
+                  •
+                </span>
+                <span className='text-muted-foreground text-sm hidden sm:inline'>
+                  {Math.ceil(displayArticle.content.split(" ").length / 200)}{" "}
+                  min read
+                </span>
               </div>
             </div>
-
-            <h2 className='text-3xl lg:text-3xl font-bold mb-4'>
-              {featuredArticle.title}
-            </h2>
-            <p className='text-lg text-muted-foreground mb-6'>
-              {featuredArticle.excerpt}
-            </p>
-            <Link href={`/news/${featuredArticle.slug}`} className='flex items-center text-sky-500 font-bold group'>
-              Read Full Article
-              <ArrowRight className='h-5 w-5 ml-2 transition-transform group-hover:translate-x-1' />
-            </Link>
-          </div>
-        </motion.div>
-      </section>
+          </motion.div>
+        </section>
+      )}
 
       {/* Content Section */}
       <div className='max-w-7xl mx-auto px-4 pb-20 grid grid-cols-1 lg:grid-cols-4 gap-8'>
-        {/* Main Content */}
         <div className='lg:col-span-3'>
-          {/* Category Filter */}
-          {/* <div className='flex flex-wrap gap-4 mb-8'>
-            {categories.map((category) => (
-              <motion.button
-                key={category.id}
-                className={`px-4 py-2 rounded-full font-medium transition-colors ${
-                  selectedCategory === category.id
-                    ? "bg-amber-500 text-white"
-                    : "bg-purple-100 text-purple-700 hover:bg-purple-200"
-                }`}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setSelectedCategory(category.id)}>
-                {category.name}
-              </motion.button>
-            ))}
-          </div> */}
-
-          {/* Search Bar */}
+          {/* Search and Filter Bar */}
           <div className='relative mb-12'>
-            <input
-              type='text'
-              placeholder='Search articles, stories, and news...'
-              className='w-full px-4 py-3 pl-12 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent'
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            <Search className='absolute left-4 top-1/2 -translate-y-1/2 text-gray-400' />
+            <div className='flex flex-col md:flex-row gap-4 items-start md:items-center'>
+              <div className='relative flex-1 w-full lg:max-w-2xl'>
+                <input
+                  type='text'
+                  placeholder='Search stories, news, and updates...'
+                  className='w-full px-4 py-3 pl-12 rounded-full border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent dark:bg-gray-800'
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  aria-label='Search articles'
+                />
+                <Search className='absolute left-4 top-1/2 -translate-y-1/2 text-gray-400' />
+              </div>
+            </div>
           </div>
 
           {/* Articles Grid */}
           {filteredArticles.length > 0 ? (
-            <div className='grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3'>
-              {otherArticles.map((article, index) => (
-                <motion.div
-                  key={article.id}
-                  className='group bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow'
-                  initial={{ y: 30, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  whileHover={{ y: -3 }}>
-                  <div className='relative h-64 lg:h-48'>
-                    <div className='relative border-2 border-dashed w-full h-full'>
-                      <Image
-                        alt='image'
-                        fill
-                        src={article.image}
-                        className='object-cover'
-                      />
-                    </div>
-                    <div className='absolute top-4 left-4 bg-amber-500/50 text-white px-3 py-1 rounded-full text-sm'>
-                      {article.category}
-                    </div>
-                  </div>
-                  <div className='px-6 py-4'>
-                    <div className='flex items-center text-muted-foreground text-sm mb-1'>
-                      <Calendar className='h-4 w-4 mr-1' />
-                      <span>{article.date}</span>
-                    
-                    </div>
-                    <h3 className='text-lg font-bold mb-3 leading-6'>
-                      {article.title}
-                    </h3>
-
-                    <Button
-                      asChild
-                      size={"sm"}
-                      variant={"outline"}
-                      className='border-amber-500 text-amber-500 group-hover:bg-amber-500 group-hover:text-white'>
-                      <Link href={`/news/${article.slug}`}>
-                        Continue Reading
-                        <MousePointerClick className='h-4 w-4 ml-1 transition-transform duration-500 group-hover:ml-3 group-hover:rotate-90 group-hover:scale-200' />
-                      </Link>
-                    </Button>
-                  </div>
-                </motion.div>
+            <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3'>
+              {filteredArticles.map((article, index) => (
+                <ArticleCard
+                  key={article._id}
+                  article={article}
+                  index={index}
+                />
               ))}
             </div>
           ) : (
-            <div className='text-center py-16'>
-              <h3 className='text-2xl font-bold mb-4'>No articles found</h3>
-              <p className='text-gray-600'>
-                Try adjusting your search or filter criteria
-              </p>
-            </div>
+            <NoResults
+              resetFilters={() => {
+                setSelectedCategory("All");
+                setSearchQuery("");
+              }}
+            />
           )}
         </div>
 
         {/* Sidebar */}
-        <div>
+        <div className='space-y-8'>
           {/* Newsletter */}
           <motion.div
-            className='bg-gradient-to-br from-sky-800 to-purple-600 text-white rounded-2xl p-6 mb-8'
+            className='bg-gradient-to-br from-sky-800 to-purple-600 text-white rounded-2xl p-6 mb-8 shadow-xl'
             initial={{ x: 30, opacity: 0 }}
             whileInView={{ x: 0, opacity: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}>
-            <h3 className='text-xl font-bold mb-4'>Stay Updated</h3>
+            <div className='flex items-center mb-4'>
+              <div className='bg-white/20 p-2 rounded-full mr-3'>
+                <PenTool className='h-5 w-5' />
+              </div>
+              <h3 className='text-xl font-bold'>Stay Updated</h3>
+            </div>
             <p className='mb-4 opacity-90'>
               Subscribe to our newsletter for festival updates, inspiring
               stories, and exclusive content.
@@ -337,16 +377,21 @@ export default function NewsPage() {
                 placeholder='Your email address'
                 className='w-full px-4 py-2 rounded-full bg-white/20 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white'
                 required
+                aria-label='Email address'
               />
-              <button
+              <motion.button
                 type='submit'
-                className='w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-2 px-4 rounded-full transition-colors'>
+                className='w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-2 px-4 rounded-full transition-colors flex items-center justify-center'
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                aria-label='Subscribe'>
                 Subscribe
-              </button>
+                <ArrowRight className='h-4 w-4 ml-2' />
+              </motion.button>
             </form>
           </motion.div>
 
-          {/* Popular Tags */}
+          {/* Popular Categories */}
           <motion.div
             className='bg-white dark:bg-gray-700 rounded-2xl p-6 shadow-lg mb-8'
             initial={{ x: 30, opacity: 0 }}
@@ -354,19 +399,30 @@ export default function NewsPage() {
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.1 }}>
             <div className='flex items-center mb-4'>
-              <Tag className='text-amber-600 mr-2' />
-              <h3 className='text-xl font-bold'>Popular Tags</h3>
+              <div className='bg-amber-100 dark:bg-amber-900 p-2 rounded-full mr-3'>
+                <Tag className='h-5 w-5 text-amber-600 dark:text-amber-400' />
+              </div>
+              <h3 className='text-xl font-bold'>Popular Categories</h3>
             </div>
-            <div className='flex flex-wrap gap-2'>
-              {popularTags.map((tag, index) => (
-                <motion.button
-                  key={index}
-                  className='bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-sm hover:bg-purple-200 transition-colors'
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}>
-                  #{tag}
-                </motion.button>
-              ))}
+            <div className='space-y-3'>
+              {categories
+                .filter((cat) => cat !== "All")
+                .map((category) => (
+                  <motion.button
+                    key={category}
+                    className={`w-full text-left px-4 py-3 rounded-lg flex items-center justify-between transition-colors ${
+                      selectedCategory === category
+                        ? "bg-amber-100 dark:bg-amber-900 text-amber-700 dark:text-amber-300"
+                        : "bg-gray-100 dark:bg-gray-600 hover:bg-gray-200 dark:hover:bg-gray-500"
+                    }`}
+                    onClick={() => setSelectedCategory(category)}
+                    whileHover={{ x: 5 }}
+                    transition={{ duration: 0.2 }}
+                    aria-label={`View ${category} articles`}>
+                    <span>{category}</span>
+                    <ArrowRight className='h-4 w-4 text-muted-foreground' />
+                  </motion.button>
+                ))}
             </div>
           </motion.div>
 
@@ -378,70 +434,58 @@ export default function NewsPage() {
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.2 }}>
             <div className='flex items-center mb-4'>
-              <Calendar className='text-amber-500 mr-2' />
+              <div className='bg-purple-100 dark:bg-purple-900 p-2 rounded-full mr-3'>
+                <Calendar className='h-5 w-5 text-purple-600 dark:text-purple-400' />
+              </div>
               <h3 className='text-xl font-bold'>Upcoming Events</h3>
             </div>
 
             <div className='space-y-4'>
-              <div className='border-l-4 border-amber-500 pl-4 py-1'>
-                <div className='text-sm text-sky-500 font-medium'>
-                  June 30, 2025
-                </div>
-                <div className='font-bold'>Speaker Announcement</div>
-              </div>
-
-              <div className='border-l-4 border-amber-500 pl-4 py-1'>
-                <div className='text-sm text-sky-500 font-medium'>
-                  July 15, 2025
-                </div>
-                <div className='font-bold'>Early Bird Registration Ends</div>
-              </div>
-
-              <div className='border-l-4 border-amber-500 pl-4 py-1'>
-                <div className='text-sm text-sky-500 font-medium'>
-                  August 5, 2025
-                </div>
-                <div className='font-bold'>Cultural Showcase Preview</div>
-              </div>
-
-              <div className='border-l-4 border-amber-500 pl-4 py-1'>
-                <div className='text-sm text-sky-500 font-medium'>
-                  November 7, 2025
-                </div>
-                <div className='font-bold'>Nwanyị bụ Ife Festival 2025</div>
-              </div>
+              {[
+                { date: "June 30, 2025", title: "Speaker Announcement" },
+                {
+                  date: "July 15, 2025",
+                  title: "Early Bird Registration Ends",
+                },
+                { date: "August 5, 2025", title: "Cultural Showcase Preview" },
+                {
+                  date: "November 7, 2025",
+                  title: "Nwanyị bụ Ife Festival 2025",
+                },
+              ].map((event, index) => (
+                <motion.div
+                  key={index}
+                  className='border-l-4 border-amber-500 pl-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-600 rounded-r-lg transition-colors cursor-pointer'
+                  whileHover={{ scale: 1.01 }}
+                  onClick={() => (window.location.href = "/events")}
+                  aria-label={`Learn more about ${event.title}`}>
+                  <div className='text-sm text-sky-600 dark:text-sky-400 font-medium'>
+                    {event.date}
+                  </div>
+                  <div className='font-bold'>{event.title}</div>
+                </motion.div>
+              ))}
             </div>
-
-            {/* <button className='mt-6 flex items-center text-purple-700 font-medium group'>
-              View Full Calendar
-              <ArrowRight className='h-4 w-4 ml-1 transition-transform group-hover:translate-x-1' />
-            </button> */}
           </motion.div>
         </div>
       </div>
 
       {/* CTA Section */}
-      <section className='py-20 bg-gradient-to-r from-amber-50 dark:from-amber-700 to-purple-50 dark:to-sky-800'>
-        <div className='max-w-4xl mx-auto px-4 text-center'>
+      <section className='py-20 bg-gradient-to-r from-amber-50 dark:from-amber-900/30 to-purple-50 dark:to-sky-900/30 relative overflow-hidden'>
+        <div className='absolute inset-0 opacity-10 dark:opacity-5'>
+          <div className='absolute top-0 left-0 w-64 h-64 bg-amber-400 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob'></div>
+          <div className='absolute top-0 right-0 w-64 h-64 bg-purple-400 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob animation-delay-2000'></div>
+          <div className='absolute bottom-0 left-1/2 w-64 h-64 bg-sky-400 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob animation-delay-4000'></div>
+        </div>
+
+        <div className='max-w-4xl mx-auto px-4 text-center relative z-10'>
           <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
             whileInView={{ scale: 1, opacity: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7 }}>
-            <div className='w-24 h-24 mx-auto bg-purple-100 rounded-full flex items-center justify-center mb-8'>
-              <svg
-                xmlns='http://www.w3.org/2000/svg'
-                className='h-12 w-12 text-sky-700'
-                fill='none'
-                viewBox='0 0 24 24'
-                stroke='currentColor'>
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  strokeWidth={2}
-                  d='M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z'
-                />
-              </svg>
+            <div className='w-24 h-24 mx-auto bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center mb-8 shadow-lg'>
+              <PenTool className='h-12 w-12 text-purple-600 dark:text-purple-400' />
             </div>
 
             <h2 className='text-3xl md:text-4xl font-bold mb-6'>
@@ -452,9 +496,15 @@ export default function NewsPage() {
               feature your journey and inspire others.
             </p>
 
-            <button className='bg-amber-500 hover:bg-amber-600 text-white font-bold px-8 py-4 rounded-full text-lg transition-all duration-300 transform hover:scale-105 shadow-lg'>
-              Submit Your Story
-            </button>
+            <motion.button
+              className='bg-amber-500 hover:bg-amber-600 text-white font-bold px-8 py-4 rounded-full text-lg transition-all duration-300 shadow-lg relative overflow-hidden group'
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => (window.location.href = "/submit-story")}
+              aria-label='Submit your story'>
+              <span className='relative z-10'>Submit Your Story</span>
+              <span className='absolute inset-0 bg-gradient-to-r from-amber-600 to-amber-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300'></span>
+            </motion.button>
           </motion.div>
         </div>
       </section>

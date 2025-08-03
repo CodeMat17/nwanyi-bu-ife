@@ -1,27 +1,30 @@
 // src/components/InterviewCard.tsx
+import { Id } from "@/convex/_generated/dataModel";
 import dayjs from "dayjs";
+import { MousePointerClick } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
-import { MousePointerClick } from "lucide-react";
 
 interface Interview {
-  id: string;
+  _id: Id<"interviews">;
   name: string;
   title: string;
+  position: string;
   excerpt: string;
-  imageUrl: string;
+  image: string;
   slug: string;
   category: string;
-  interviewDate: string;
+  date: string;
+  content: string;
 }
 
 interface InterviewCardProps {
-  interviews: Interview[];
+  interviews: Interview[] | undefined;
 }
 
-export default function InterviewCard({ interviews }: InterviewCardProps) {
+export default function InterviewCard({ interviews = [] }: InterviewCardProps) {
   return (
     <div className='py-4'>
       <div className='relative'>
@@ -31,7 +34,7 @@ export default function InterviewCard({ interviews }: InterviewCardProps) {
                         hide-scrollbar gap-4 sm:gap-6 px-4 lg:justify-center'>
           {interviews.map((interview) => (
             <div
-              key={interview.id}
+              key={interview._id}
               className='flex-shrink-0 w-[220px] md:w-[260px] lg:w-[300px] snap-center group rounded-xl 
                         overflow-hidden shadow-md hover:shadow-lg transition-all duration-300
                         transform hover:-translate-y-1 flex flex-col h-full'>
@@ -40,7 +43,7 @@ export default function InterviewCard({ interviews }: InterviewCardProps) {
                 <Image
                   alt={`${interview.name} interview`}
                   fill
-                  src={interview.imageUrl}
+                  src={interview.image}
                   className='object-cover transition-all duration-300 group-hover:opacity-90 group-hover:scale-105'
                   sizes='(max-width: 640px) 220px, (max-width: 768px) 260px, 300px'
                 />
@@ -62,7 +65,7 @@ export default function InterviewCard({ interviews }: InterviewCardProps) {
                   </p> */}
                   <div className='flex items-center justify-between py-2 mt-2'>
                     <p className='text-xs text-muted-foreground'>
-                      {dayjs(interview.interviewDate).format("MMM D, YYYY")}
+                      {dayjs(interview.date).format("MMM D, YYYY")}
                     </p>
                     <Badge variant='outline' className='text-xs capitalize'>
                       {interview.category}

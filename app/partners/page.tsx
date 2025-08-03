@@ -3,155 +3,16 @@
 import CulturalPattern from "@/components/CulturalPattern";
 import GlowingBanner from "@/components/GlowingBanner";
 import ScrollingPartners from "@/components/partners/ScrollingPartners";
+import { api } from "@/convex/_generated/api";
+import { useQuery } from "convex/react";
 import { motion } from "framer-motion";
 import { Handshake } from "lucide-react";
 
-// Partner data
-// const partners = [
-//   {
-//     id: 1,
-//     name: "UBA",
-//     logo: "/partners/img_8.png",
-//     description: "Financial empowerment partner",
-//   },
-//   {
-//     id: 2,
-//     name: "Company",
-//     logo: "/partners/img_1.png",
-//     description: "Technology education sponsor",
-//   },
-//   {
-//     id: 3,
-//     name: "Enugu State",
-//     logo: "/partners/img_2.jpeg",
-//     description: "Logistics",
-//   },
-//   {
-//     id: 4,
-//     name: "FirstBank",
-//     logo: "/partners/img_3.png",
-//     description: "Technology education sponsor",
-//   },
-//   {
-//     id: 5,
-//     name: "GLO",
-//     logo: "/partners/img_4.jpg",
-//     description: "Financial empowerment partner",
-//   },
-//   {
-//     id: 6,
-//     name: "Insurance",
-//     logo: "/partners/img_5.jpeg",
-//     description: "Technology education sponsor",
-//   },
-//   {
-//     id: 7,
-//     name: "Real Estate",
-//     logo: "/partners/img_6.jpeg",
-//     description: "Financial empowerment partner",
-//   },
-//   {
-//     id: 8,
-//     name: "MTN",
-//     logo: "/partners/img_7.jpg",
-//     description: "Technology education sponsor",
-//   },
-// ];
-
-// const ScrollingPartners = ({
-//   partners,
-// }: {
-//   partners: Array<{ id: number; name: string; logo: string }>;
-// }) => {
-//   const [hovered, setHovered] = useState(false);
-//   const controls = useAnimation();
-//   const duration = 20; // Adjust speed here (lower = faster)
-
-//   // Double the partners array for seamless looping
-//   const extendedPartners = [...partners, ...partners];
-
-//   useEffect(() => {
-//     const scrollAnimation = async () => {
-//       await controls.start({
-//         x: "-50%", // Matches the duplicated content
-//         transition: {
-//           duration: duration,
-//           ease: "linear",
-//           repeat: Infinity,
-//           repeatType: "loop",
-//         },
-//       });
-//     };
-
-//     if (!hovered) {
-//       scrollAnimation();
-//     } else {
-//       controls.stop();
-//     }
-//   }, [controls, hovered]);
-
-//   return (
-//     <div
-//       className='relative w-full h-48 overflow-hidden my-12'
-//       onMouseEnter={() => setHovered(true)}
-//       onMouseLeave={() => setHovered(false)}>
-//       {/* Gradient fade effect on sides */}
-//       <div className='absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-amber-50 to-transparent dark:from-gray-800 z-10 pointer-events-none' />
-//       <div className='absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-amber-50 to-transparent dark:from-gray-800 z-10 pointer-events-none' />
-
-//       {/* First set of partners (visible) */}
-//       <motion.div
-//         className='flex absolute h-full gap-6'
-//         animate={controls}
-//         style={{ left: "0%" }}>
-//         {extendedPartners.map((partner, index) => (
-//           <motion.div
-//             key={`first-${partner.id}-${index}`}
-//             className='flex-shrink-0 h-32 w-48 relative rounded-xl overflow-hidden'
-//             whileHover={{
-//               scale: 1.1,
-//               transition: { duration: 0.2 },
-//             }}>
-//             <Image
-//               src={partner.logo}
-//               alt={partner.name}
-//               fill
-//               className='object-contain p-4'
-//               style={{ objectPosition: "center" }}
-//             />
-//           </motion.div>
-//         ))}
-//       </motion.div>
-
-//       {/* Second set of partners (duplicate for seamless transition) */}
-//       <motion.div
-//         className='flex absolute h-full gap-6'
-//         animate={controls}
-//         style={{ left: "50%" }} // Positioned immediately after first set
-//       >
-//         {extendedPartners.map((partner, index) => (
-//           <motion.div
-//             key={`second-${partner.id}-${index}`}
-//             className='flex-shrink-0 h-32 w-48 relative rounded-xl overflow-hidden'
-//             whileHover={{
-//               scale: 1.1,
-//               transition: { duration: 0.2 },
-//             }}>
-//             <Image
-//               src={partner.logo}
-//               alt={partner.name}
-//               fill
-//               className='object-contain p-4'
-//               style={{ objectPosition: "center" }}
-//             />
-//           </motion.div>
-//         ))}
-//       </motion.div>
-//     </div>
-//   );
-// };
 
 export default function PartnersPage() {
+
+const partners = useQuery(api.partners.getPartnershipSupport)
+
   return (
     <div className='relative overflow-hidden'>
       <CulturalPattern />
@@ -165,29 +26,25 @@ export default function PartnersPage() {
       {/* Partnership Intro */}
       <section className='py-20 px-4 max-w-7xl mx-auto'>
         <div className='grid grid-cols-1 lg:grid-cols-2 gap-16 items-center'>
-          <motion.div
-            initial={{ x: -30, opacity: 0 }}
-            whileInView={{ x: 0, opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7 }}>
-            <div className='bg-amber-100 p-6 rounded-2xl inline-block mb-6'>
-              <Handshake className='text-amber-500 w-12 h-12' />
-            </div>
-            <h2 className='text-3xl md:text-4xl font-bold mb-6'>
-              Powering Women&apos;s Empowerment Together
-            </h2>
-            <p className='text-lg text-muted-foreground mb-6'>
-              The Nwanyị bụ Ife Festival is made possible through the generous
-              support of organizations committed to gender equality and cultural
-              preservation. Our partners share our vision of creating platforms
-              where women&apos;s potential can flourish.
-            </p>
-            <p className='text-lg text-muted-foreground'>
-              Together, we&apos;re building a movement that celebrates
-              women&apos;s achievements, preserves cultural heritage, and
-              creates opportunities for the next generation of women leaders.
-            </p>
-          </motion.div>
+          {partners ? (
+            <motion.div
+              initial={{ x: -30, opacity: 0 }}
+              whileInView={{ x: 0, opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7 }}>
+              <div className='bg-amber-100 p-6 rounded-2xl inline-block mb-6'>
+                <Handshake className='text-amber-500 w-12 h-12' />
+              </div>
+              <h2 className='text-3xl md:text-4xl font-bold mb-6'>
+{partners.title}              </h2>
+              <p className='text-lg text-muted-foreground mb-6'>
+               {partners.body}
+              </p>
+         
+            </motion.div>
+          ) : (
+            <div className='flex justify-center py-48'>loading...</div>
+          )}
 
           <motion.div
             initial={{ x: 30, opacity: 0 }}
@@ -233,7 +90,7 @@ export default function PartnersPage() {
       </section>
 
       {/* Testimonial Section */}
-      <section className='py-20 bg-gradient-to-r from-sky-800 to-purple-600 text-white'>
+      {/* <section className='py-20 bg-gradient-to-r from-sky-800 to-purple-600 text-white'>
         <div className='max-w-4xl mx-auto px-4 text-center'>
           <motion.div
             initial={{ scale: 0 }}
@@ -280,7 +137,7 @@ export default function PartnersPage() {
             </p>
           </motion.div>
         </div>
-      </section>
+      </section> */}
 
       {/* CTA Section */}
       <section className='py-20 bg-[url("/images/pattern-bg.jpg")] bg-cover bg-center relative'>
@@ -311,7 +168,6 @@ export default function PartnersPage() {
                 whileTap={{ scale: 0.95 }}>
                 Contact Our Partnership Team
               </motion.button>
-            
             </div>
           </motion.div>
         </div>

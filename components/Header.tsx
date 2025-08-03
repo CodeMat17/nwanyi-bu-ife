@@ -33,14 +33,15 @@ const navigation: NavItem[] = [
     name: "About Festival",
     subMenu: [
       { name: "About Us", href: "/about" },
-      { name: "The Team", href: "/team" },
+      // { name: "The Team", href: "/team" },
       { name: "Partners", href: "/partners" },
     ],
   },
   {
-    name: "Experience",
+    name: "Program",
     subMenu: [
-      { name: "2025 Program", href: "/program", badge: "New" },
+      { name: "2025 Schedule", href: "/schedule", badge: "New" },
+      { name: "Speakers", href: "/speakers", badge: "New" },
       { name: "Photo Gallery", href: "/gallery" },
       { name: "Interviews", href: "/interviews" },
     ],
@@ -59,11 +60,13 @@ const navigation: NavItem[] = [
 const mobileNavigation: NavItem[] = [
   { name: "Home", href: "/" },
   { name: "About Festival", href: "/about" },
-  { name: "Our Partners", href: "/partners" },
-  { name: "2025 Program", href: "/program" },
+
+  { name: "Schedule", href: "/schedule" },
+  { name: "Speakers", href: "/speakers" },
   { name: "Gallery", href: "/gallery" },
   { name: "News & Updates", href: "/news" },
   { name: "Nominate Someone", href: "/nomination" },
+  { name: "Our Partners", href: "/partners" },
   {
     name: "Register Now",
     href: "/register",
@@ -111,7 +114,7 @@ export default function Header() {
 
               <div className='ml-2 sm:ml-3'>
                 <h1 className='text-2xl font-joti font-bold text-gray-800 dark:text-white'>
-                  Nwanyị bụ <span className='text-amber-500'>ife</span>
+                  Nwanyị bụ <span className='text-amber-500'>ịfe</span>
                 </h1>
               </div>
             </Link>

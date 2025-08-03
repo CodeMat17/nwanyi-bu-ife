@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/sonner";
 
 import Footer from "@/components/Footer";
 import { ThemeProvider } from "@/components/theme-provider";
+import ConvexClientProvider from "@/lib/convex-provider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -62,7 +63,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange>
           <Header />
-          <main className='flex-grow'>{children}</main>
+          <main className='flex-grow'>
+            <ConvexClientProvider>{children}</ConvexClientProvider>
+          </main>
           <Footer />
           <Toaster />
         </ThemeProvider>
