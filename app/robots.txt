@@ -1,0 +1,27 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /api
+
+# Crawl-delay: 10
+
+User-agent: Googlebot
+Allow: /
+Disallow: /admin
+Disallow: /api
+Disallow: /private
+Crawl-delay: 5
+
+User-agent: Googlebot-Image
+Allow: /images/
+Allow: /gallery/
+
+User-agent: Bingbot
+Allow: /
+Disallow: /admin
+Disallow: /api
+Disallow: /private
+Crawl-delay: 5
+
+Sitemap: https://www.nwanyi-bu-ife.com.ng/sitemap.xml
+Sitemap: https://www.nwanyi-bu-ife.com.ng/server-sitemap.xml

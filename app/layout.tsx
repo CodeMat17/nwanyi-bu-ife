@@ -21,31 +21,84 @@ const joti = Joti_One({
 });
 
 export const metadata: Metadata = {
-  title:
-    "Nwanyị bụ Ife Festival 2025 | Women Empowerment & Cultural Celebration",
+  metadataBase: new URL("https://www.nwanyi-bu-ife.com.ng"),
+  title: {
+    default: "Nwanyị bụ ịfe - Celebrating African Women Excellence",
+    template: "%s | Nwanyị bụ ịfe",
+  },
+
   description:
-    "Annual festival celebrating Igbo women empowerment, cultural heritage, and excellence. Join us on November 7, 2025 at International Conference Centre, IMT Enugu.",
+    "Annual award festival celebrating the achievements of African women in various fields including technology, arts, and leadership.",
   keywords: [
+    "African women",
     "women empowerment",
     "Igbo culture",
+    "Culture",
     "festival",
     "cultural heritage",
     "awards",
     "Enugu",
+    "empowerment",
     "Nigeria",
+    "Nwanyị bụ ịfe",
+    "nwanyi-bu-ife",
+    "Nwanyi bụ ife",
   ],
   openGraph: {
-    title: "Nwanyị bụ Ife Festival 2025",
-    description:
-      "Empowering women, showcasing cultural heritage, and celebrating achievements.",
+    title: "Nwanyị bụ ịfe - Celebrating African Women Excellence'",
+    description: "Annual award festival celebrating African women achievements",
+    url: "https://www.nwanyi-bu-ife.com.ng",
+    siteName: "Nwanyị bụ ịfe",
     images: [
       {
         url: "/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "Nwanyị bụ Ife Festival",
+        alt: "Nwanyị bụ ịfe festival",
       },
     ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Nwanyị bụ ịfe - Celebrating African Women Excellence",
+    description: "Annual award festival celebrating African women achievements",
+    images: ["/images/twitter-card.jpg"],
+    site: "@nwanyibuife",
+    creator: "@nwanyibuife",
+  },
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon-16x16.png",
+    apple: "/apple-touch-icon.png",
+  },
+  authors: [
+    { name: "Nwanyị bụ ịfe Team", url: "https://nwanyi-bu-ife.com.ng" },
+  ],
+  formatDetection: {
+    email: true,
+    address: true,
+    telephone: true,
+  },
+  alternates: {
+    canonical: "/",
+    languages: {
+      "en-US": "/en-US",
+    },
+  },
+  robots: {
+    index: true,
+    follow: true,
+    nocache: false,
+    googleBot: {
+      index: true,
+      follow: true,
+      noimageindex: false,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
   },
 };
 
