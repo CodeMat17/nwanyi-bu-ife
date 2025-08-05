@@ -1,19 +1,25 @@
-import NewsSlugPage from "@/components/news/NewsSlugPage";
 import { api } from "@/convex/_generated/api";
 import { fetchQuery } from "convex/nextjs";
-import { Metadata, ResolvingMetadata } from "next";
+import { Metadata } from "next";
+import dynamic from "next/dynamic";
 
-type Props = {
-  params: { slug: string };
-};
+const NewsSlugPage = dynamic(
+  () => import("@/components/interviews/InterviewSlugPage"),
+  {
+    loading: () => <NewsSlugPage />,
+    ssr: true,
+  }
+);
 
-export async function generateMetadata(
-  { params }: Props,
-  parent: ResolvingMetadata
-): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+  }): Promise<Metadata> {
+    const { slug } = await params;
   // Fetch news article from Convex
   const news = await fetchQuery(api.news.getBySlug, {
-    slug: params.slug,
+    slug,
   });
 
   if (!news) {
@@ -30,11 +36,9 @@ export async function generateMetadata(
   // Construct URLs
   const baseUrl =
     process.env.NEXT_PUBLIC_BASE_URL || "https://www.nwanyi-bu-ife.com.ng";
-  const articleUrl = `${baseUrl}/news/${params.slug}`;
+  const articleUrl = `${baseUrl}/news/${slug}`;
 
-  // Get inherited metadata
-  const previousImages = (await parent).openGraph?.images || [];
-  const previousKeywords = (await parent).keywords || [];
+ 
 
   // Prepare metadata
   return {
@@ -61,7 +65,7 @@ export async function generateMetadata(
           height: 630,
           alt: `${news.title} featured image`,
         },
-        ...previousImages,
+   
       ],
     },
     twitter: {
@@ -74,7 +78,7 @@ export async function generateMetadata(
       creator: "@nwanyi_bu_ife",
     },
     keywords: [
-      ...(Array.isArray(previousKeywords) ? previousKeywords : []),
+
       "Nwanyị bụ ịfe news",
       "festival updates",
       "African cultural events",
