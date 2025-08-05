@@ -16,33 +16,38 @@ import { useParams } from "next/navigation";
 import { useMemo } from "react";
 
 
+
 const InterviewSlugPage = () => {
-
-
   const params = useParams();
 
+  const slug = useMemo(() => {
+    if (!params?.slug) return null;
+    return Array.isArray(params.slug) ? params.slug[0] : params.slug;
+  }, [params]);
 
-   const slug = useMemo(() => {
-     if (!params?.slug) return null;
-     return Array.isArray(params.slug) ? params.slug[0] : params.slug;
-   }, [params]);
-
-  const interview = useQuery(api.interviews.getInterviewBySlug, slug ? { slug } : 'skip');
+  const interview = useQuery(
+    api.interviews.getInterviewBySlug,
+    slug ? { slug } : "skip"
+  );
 
   const handleShare = () => {
     if (!interview) return;
 
+    const shareData = {
+      title: interview.title,
+      text: `Read this interview from Nwanyị bụ Ịfe Festival: ${interview.excerpt}`,
+      url: window.location.href,
+    };
+
     if (navigator.share) {
-      navigator
-        .share({
-          title: interview.title,
-          text: `Read this interview from Nwanyị bụ Ịfe Festival: ${interview.excerpt}`,
-          url: window.location.href,
-        })
-        .catch(console.error);
+      navigator.share(shareData).catch(() => {
+        toast.error("Failed to share");
+      });
     } else {
-      navigator.clipboard.writeText(window.location.href);
-      toast.success("Link copied to clipboard!");
+      navigator.clipboard
+        .writeText(window.location.href)
+        .then(() => toast.success("Link copied to clipboard!"))
+        .catch(() => toast.error("Failed to copy link"));
     }
   };
 
@@ -50,13 +55,9 @@ const InterviewSlugPage = () => {
     return (
       <div className='max-w-4xl mx-auto px-4 py-8'>
         <CulturalPattern />
-
-        {/* Back button skeleton */}
         <div className='mb-8'>
           <Skeleton className='h-10 w-32 rounded-full' />
         </div>
-
-        {/* Header skeleton */}
         <div className='mb-12 space-y-6'>
           <div className='flex justify-between gap-6'>
             <div className='space-y-4'>
@@ -65,8 +66,6 @@ const InterviewSlugPage = () => {
             </div>
             <Skeleton className='h-10 w-24 rounded-lg' />
           </div>
-
-          {/* Image skeleton with shimmer effect */}
           <div className='relative w-full h-96 rounded-2xl overflow-hidden bg-gradient-to-r from-gray-100 via-gray-200 to-gray-100 animate-pulse'>
             <div className='absolute inset-0 bg-gradient-to-t from-black/30 to-transparent' />
             <div className='absolute bottom-0 left-0 p-6 space-y-2'>
@@ -75,8 +74,6 @@ const InterviewSlugPage = () => {
             </div>
           </div>
         </div>
-
-        {/* Content skeleton */}
         <div className='space-y-4'>
           {Array.from({ length: 12 }).map((_, i) => (
             <Skeleton
@@ -119,7 +116,6 @@ const InterviewSlugPage = () => {
     <div className='max-w-4xl mx-auto px-4 py-8'>
       <CulturalPattern />
 
-      {/* Navigation */}
       <motion.div
         className='mb-8'
         initial={{ opacity: 0, x: -20 }}
@@ -136,7 +132,6 @@ const InterviewSlugPage = () => {
         </Button>
       </motion.div>
 
-      {/* Header */}
       <motion.header
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -151,7 +146,6 @@ const InterviewSlugPage = () => {
               transition={{ delay: 0.2 }}>
               {interview.title}
             </motion.h1>
-
             <div className='flex flex-col sm:flex-row sm:gap-6 text-muted-foreground'>
               <div className='flex items-center gap-2'>
                 <span className='font-medium'>Published:</span>
@@ -159,7 +153,6 @@ const InterviewSlugPage = () => {
               </div>
             </div>
           </div>
-
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -203,7 +196,6 @@ const InterviewSlugPage = () => {
         </motion.div>
       </motion.header>
 
-      {/* Content */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}

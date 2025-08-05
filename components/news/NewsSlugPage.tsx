@@ -10,15 +10,20 @@ import { motion, useScroll } from "framer-motion";
 import { ArrowLeft, ArrowRight, Calendar, Eye, Share2 } from "lucide-react";
 import Image from "next/image";
 import { notFound, useParams, useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { SanitizedArticleContent } from "@/components/SanitizedArticleContent";
 
 export default function NewsSlugPage() {
-  const { slug } = useParams() as { slug: string };
+  const params = useParams() 
   const router = useRouter();
   const { scrollXProgress } = useScroll();
 
-  const article = useQuery(api.news.getBySlug, { slug });
+  const slug = useMemo(() => {
+    if (!params?.slug) return null;
+    return Array.isArray(params.slug) ? params.slug[0] : params.slug;
+  }, [params]);
+
+  const article = useQuery(api.news.getBySlug, slug ? { slug } : "skip");
   const allArticles = useQuery(api.news.getAll);
 
   useEffect(() => {
