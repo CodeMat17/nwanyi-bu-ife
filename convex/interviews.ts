@@ -19,7 +19,11 @@ export const getInterviewBySlug = query({
     if (!interview) return null;
 
     // Convert imageId to URL if needed
-    const imageUrl = await ctx.storage.getUrl(interview.imageId);
+    // Handle potential missing imageId
+    const imageUrl = interview.imageId
+      ? await ctx.storage.getUrl(interview.imageId)
+      : null;
+
     return { ...interview, image: imageUrl };
   },
 });
