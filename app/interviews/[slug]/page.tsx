@@ -88,6 +88,6 @@ export async function generateMetadata(
   };
 }
 
-export default function Page() {
-  return <InterviewSlugPage />;
+export default function Page({params}: Props) {
+  return <InterviewSlugPage params={params}  />;
 }

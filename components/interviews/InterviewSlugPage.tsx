@@ -14,12 +14,15 @@ import { api } from "@/convex/_generated/api";
 import { SanitizedArticleContent } from "../SanitizedArticleContent";
 import { useParams } from "next/navigation";
 
+interface PageProps {
+  params: {
+    slug: string;
+  };
+}
 
-
-const InterviewSlugPage = () => {
-  const {slug} = useParams() as { slug: string };
-
-  // Fetch the current interview
+const InterviewSlugPage = ({ params }: PageProps) => {
+  const fallbackParams = useParams();
+  const slug = params?.slug || (fallbackParams?.slug as string);
   const interview = useQuery(api.interviews.getInterviewBySlug, { slug });
 
   const handleShare = () => {
@@ -42,20 +45,45 @@ const InterviewSlugPage = () => {
   if (interview === undefined) {
     return (
       <div className='max-w-4xl mx-auto px-4 py-8'>
-        <Skeleton className='h-10 w-3/4 mb-6' />
-        <div className='flex items-center space-x-4 mb-8'>
-          <Skeleton className='h-4 w-32' />
-          <Skeleton className='h-4 w-32' />
+        <CulturalPattern />
+
+        {/* Back button skeleton */}
+        <div className='mb-8'>
+          <Skeleton className='h-10 w-32 rounded-full' />
         </div>
-        <div className='flex flex-col md:flex-row gap-8'>
-          <div className='md:w-1/3'>
-            <Skeleton className='h-96 w-full rounded-xl' />
+
+        {/* Header skeleton */}
+        <div className='mb-12 space-y-6'>
+          <div className='flex justify-between gap-6'>
+            <div className='space-y-4'>
+              <Skeleton className='h-10 w-3/4 rounded-lg' />
+              <Skeleton className='h-4 w-48 rounded-full' />
+            </div>
+            <Skeleton className='h-10 w-24 rounded-lg' />
           </div>
-          <div className='md:w-2/3 space-y-4'>
-            {Array.from({ length: 8 }).map((_, i) => (
-              <Skeleton key={i} className='h-4 w-full' />
-            ))}
+
+          {/* Image skeleton with shimmer effect */}
+          <div className='relative w-full h-96 rounded-2xl overflow-hidden bg-gradient-to-r from-gray-100 via-gray-200 to-gray-100 animate-pulse'>
+            <div className='absolute inset-0 bg-gradient-to-t from-black/30 to-transparent' />
+            <div className='absolute bottom-0 left-0 p-6 space-y-2'>
+              <Skeleton className='h-6 w-48 rounded-full' />
+              <Skeleton className='h-5 w-64 rounded-full' />
+            </div>
           </div>
+        </div>
+
+        {/* Content skeleton */}
+        <div className='space-y-4'>
+          {Array.from({ length: 12 }).map((_, i) => (
+            <Skeleton
+              key={i}
+              className='h-4 w-full rounded-full'
+              style={{
+                width: `${100 - (i % 3) * 15}%`,
+                opacity: 1 - i * 0.05,
+              }}
+            />
+          ))}
         </div>
       </div>
     );
@@ -64,11 +92,21 @@ const InterviewSlugPage = () => {
   if (!interview) {
     return (
       <div className='max-w-4xl mx-auto px-4 py-20 text-center'>
-        <h2 className='text-2xl font-bold mb-4'>Interview not found</h2>
-        <p>The requested interview could not be found.</p>
-        <Button className='mt-6' asChild>
-          <Link href='/interviews'>Browse all interviews</Link>
-        </Button>
+        <CulturalPattern />
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}>
+          <h2 className='text-3xl font-bold mb-4'>Interview Not Found</h2>
+          <p className='text-lg mb-8'>
+            The requested interview could not be found.
+          </p>
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <Button className='mt-6' asChild>
+              <Link href='/interviews'>Browse All Interviews</Link>
+            </Button>
+          </motion.div>
+        </motion.div>
       </div>
     );
   }
@@ -78,17 +116,21 @@ const InterviewSlugPage = () => {
       <CulturalPattern />
 
       {/* Navigation */}
-      <div className='mb-8'>
+      <motion.div
+        className='mb-8'
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ delay: 0.2 }}>
         <Button
           variant='ghost'
-          className='text-amber-600 hover:text-amber-700'
+          className='text-amber-600 hover:text-amber-700 group'
           asChild>
           <Link href='/interviews'>
-            <ArrowLeft className='mr-2 h-4 w-4' />
+            <ArrowLeft className='mr-2 h-4 w-4 transition-transform group-hover:-translate-x-1' />
             Back to Interviews
           </Link>
         </Button>
-      </div>
+      </motion.div>
 
       {/* Header */}
       <motion.header
@@ -99,59 +141,71 @@ const InterviewSlugPage = () => {
         <div className='flex flex-col md:flex-row justify-between gap-6 mb-8'>
           <div>
             <motion.h1
-              className='text-3xl md:text-4xl font-bold mb-4'
+              className='text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-amber-600 to-amber-800 bg-clip-text text-transparent'
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2 }}>
               {interview.title}
             </motion.h1>
 
-            <div className='flex flex-col sm:flex-row sm:gap-6 text-muted-foreground italic text-sm'>
-              <div>
-                <span className='font-medium'>Published:</span>{" "}
+            <div className='flex flex-col sm:flex-row sm:gap-6 text-muted-foreground'>
+              <div className='flex items-center gap-2'>
+                <span className='font-medium'>Published:</span>
                 {dayjs(interview._creationTime).format("MMM DD, YYYY")}
               </div>
             </div>
           </div>
 
-          <div>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.3 }}>
             <Button
               variant='outline'
-              className='flex items-center gap-2 border-amber-500 text-amber-600 hover:bg-amber-50'
+              className='flex items-center gap-2 border-amber-500 text-amber-600 hover:bg-amber-50 hover:shadow-md transition-all'
               onClick={handleShare}>
               <Share2 className='h-4 w-4' />
               Share
             </Button>
-          </div>
+          </motion.div>
         </div>
 
-        <div className='relative w-full h-96 rounded-2xl overflow-hidden shadow-lg'>
+        <motion.div
+          className='relative w-full h-96 rounded-2xl overflow-hidden shadow-xl'
+          initial={{ opacity: 0, scale: 0.98 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5, delay: 0.4 }}>
           {interview.image ? (
             <Image
               src={interview.image}
               alt={`${interview.name}, ${interview.position}`}
               fill
-              className='object-cover'
+              className='object-cover transition-transform duration-700 hover:scale-105'
               priority
               sizes='(max-width: 768px) 100vw, 80vw'
             />
           ) : (
-            <div className='w-full h-full bg-gray-200 flex items-center justify-center'>
+            <div className='w-full h-full bg-gradient-to-br from-gray-100 to-gray-300 flex items-center justify-center'>
               <span className='text-gray-500'>No image available</span>
             </div>
           )}
-          <div className='absolute inset-0 bg-gradient-to-t from-black/70 to-transparent' />
+          <div className='absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent' />
           <div className='absolute bottom-0 left-0 p-6 text-white'>
             <h2 className='text-xl font-semibold'>Featured Interviewee</h2>
-            <p className='text-amber-300'>
+            <p className='text-amber-300 font-medium'>
               {interview.name}, {interview.position}
             </p>
           </div>
-        </div>
+        </motion.div>
       </motion.header>
 
       {/* Content */}
-      <SanitizedArticleContent content={interview.content} />
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.6 }}>
+        <SanitizedArticleContent content={interview.content} />
+      </motion.div>
     </div>
   );
 };
