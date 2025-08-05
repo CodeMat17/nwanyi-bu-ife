@@ -1,18 +1,23 @@
-import { Metadata, ResolvingMetadata } from "next";
-import { fetchQuery } from "convex/nextjs";
 import { api } from "@/convex/_generated/api";
-import InterviewSlugPage from "@/components/interviews/InterviewSlugPage";
+import { fetchQuery } from "convex/nextjs";
+import { Metadata } from "next";
+import dynamic from "next/dynamic";
 
-type Props = {
-  params: { slug: string };
-};
+const InterviewSlugPage = dynamic(
+  () => import("@/components/interviews/InterviewSlugPage"),
+  {
+    loading: () => <InterviewSlugPage />,
+    ssr: true,
+  }
+);
 
 export async function generateMetadata(
-  { params }: Props,
-  parent: ResolvingMetadata
-): Promise<Metadata> {
+  { params }: {
+    params: Promise<{ slug: string }>
+  }): Promise<Metadata> {
+  const { slug } = await params;
   const interview = await fetchQuery(api.interviews.getInterviewBySlug, {
-    slug: params.slug,
+    slug,
   });
 
   if (!interview) {
@@ -27,7 +32,7 @@ export async function generateMetadata(
 
   const baseUrl =
     process.env.NEXT_PUBLIC_BASE_URL || "https://www.nwanyi-bu-ife.com.ng";
-  const interviewUrl = `${baseUrl}/interviews/${params.slug}`;
+  const interviewUrl = `${baseUrl}/interviews/${slug}`;
 
   // Handle potential null image
   const defaultImage = `${baseUrl}/images/default-interview.jpg`;
@@ -37,8 +42,6 @@ export async function generateMetadata(
       : `${baseUrl}${interview.image}`
     : defaultImage;
 
-  const previousImages = (await parent).openGraph?.images || [];
-  const previousKeywords = (await parent).keywords || [];
 
   return {
     title: `${interview.title} | Interview with ${interview.name}`,
@@ -64,7 +67,6 @@ export async function generateMetadata(
           height: 630,
           alt: `Interview with ${interview.name}`,
         },
-        ...previousImages,
       ],
     },
     twitter: {
@@ -76,7 +78,7 @@ export async function generateMetadata(
       images: [imageUrl],
     },
     keywords: [
-      ...(Array.isArray(previousKeywords) ? previousKeywords : []),
+  
       interview.name,
       `${interview.name} interview`,
       interview.title,
@@ -89,5 +91,5 @@ export async function generateMetadata(
 }
 
 export default function Page() {
-  return <InterviewSlugPage  />;
+  return <InterviewSlugPage />;
 }
