@@ -13,17 +13,21 @@ import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { SanitizedArticleContent } from "../SanitizedArticleContent";
 import { useParams } from "next/navigation";
+import { useMemo } from "react";
 
-interface PageProps {
-  params: {
-    slug: string;
-  };
-}
 
-const InterviewSlugPage = ({ params }: PageProps) => {
-  const fallbackParams = useParams();
-  const slug = params?.slug || (fallbackParams?.slug as string);
-  const interview = useQuery(api.interviews.getInterviewBySlug, { slug });
+const InterviewSlugPage = () => {
+
+
+  const params = useParams();
+
+
+   const slug = useMemo(() => {
+     if (!params?.slug) return null;
+     return Array.isArray(params.slug) ? params.slug[0] : params.slug;
+   }, [params]);
+
+  const interview = useQuery(api.interviews.getInterviewBySlug, slug ? { slug } : 'skip');
 
   const handleShare = () => {
     if (!interview) return;
