@@ -9,8 +9,6 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
 
-
-
 const colors = ["from-purple-900/80", "from-amber-800/80", "from-teal-800/80"];
 
 export default function HeroCarousel() {
@@ -41,48 +39,88 @@ export default function HeroCarousel() {
   };
 
   // Handle loading state
+  // if (slides === undefined) {
+  //   return (
+  //     <div className='relative h-[70vh] w-full overflow-hidden sm:rounded-xl bg-gray-100 dark:bg-gray-800'>
+  //       {/* Main shimmer effect */}
+  //       <div className='absolute inset-0 animate-pulse'>
+  //         <div className='h-full w-full bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 dark:from-gray-700 dark:via-gray-800 dark:to-gray-700' />
+  //       </div>
+
+  //       {/* Content placeholder structure */}
+  //       <div className='relative h-full w-full flex flex-col p-6 md:p-8'>
+  //         {/* Title placeholder */}
+  //         <div className='mb-4 h-8 w-3/4 rounded-full bg-gray-300 dark:bg-gray-600 animate-pulse' />
+
+  //         {/* Excerpt placeholder */}
+  //         <div className='mb-2 h-4 w-full rounded-full bg-gray-300 dark:bg-gray-600 animate-pulse' />
+  //         <div className='mb-2 h-4 w-5/6 rounded-full bg-gray-300 dark:bg-gray-600 animate-pulse' />
+  //         <div className='mb-6 h-4 w-2/3 rounded-full bg-gray-300 dark:bg-gray-600 animate-pulse' />
+
+  //         {/* Metadata placeholders */}
+  //         <div className='flex gap-4 mb-8'>
+  //           <div className='h-5 w-24 rounded-full bg-gray-300 dark:bg-gray-600 animate-pulse' />
+  //           <div className='h-5 w-20 rounded-full bg-gray-300 dark:bg-gray-600 animate-pulse' />
+  //         </div>
+
+  //         {/* CTA button placeholder */}
+  //         <div className='mt-auto h-10 w-32 rounded-lg bg-gray-300 dark:bg-gray-600 animate-pulse' />
+  //       </div>
+
+  //       {/* Moving shimmer overlay */}
+  //       <div
+  //         className='absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent dark:via-gray-700/50 animate-shimmer'
+  //         style={{ animationDuration: "2s" }}
+  //       />
+
+  //       {/* Navigation dots placeholder */}
+  //       <div className='absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2'>
+  //         {[...Array(3)].map((_, i) => (
+  //           <div
+  //             key={i}
+  //             className='h-2 w-2 rounded-full bg-gray-300/80 dark:bg-gray-600/80 animate-pulse'
+  //           />
+  //         ))}
+  //       </div>
+  //     </div>
+  //   );
+  // }
+
+  // Handle loading state with a beautiful festival placeholder
   if (slides === undefined) {
     return (
-      <div className='relative h-[70vh] w-full overflow-hidden sm:rounded-xl bg-gray-100 dark:bg-gray-800'>
-        {/* Main shimmer effect */}
-        <div className='absolute inset-0 animate-pulse'>
-          <div className='h-full w-full bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 dark:from-gray-700 dark:via-gray-800 dark:to-gray-700' />
-        </div>
-
-        {/* Content placeholder structure */}
-        <div className='relative h-full w-full flex flex-col p-6 md:p-8'>
-          {/* Title placeholder */}
-          <div className='mb-4 h-8 w-3/4 rounded-full bg-gray-300 dark:bg-gray-600 animate-pulse' />
-
-          {/* Excerpt placeholder */}
-          <div className='mb-2 h-4 w-full rounded-full bg-gray-300 dark:bg-gray-600 animate-pulse' />
-          <div className='mb-2 h-4 w-5/6 rounded-full bg-gray-300 dark:bg-gray-600 animate-pulse' />
-          <div className='mb-6 h-4 w-2/3 rounded-full bg-gray-300 dark:bg-gray-600 animate-pulse' />
-
-          {/* Metadata placeholders */}
-          <div className='flex gap-4 mb-8'>
-            <div className='h-5 w-24 rounded-full bg-gray-300 dark:bg-gray-600 animate-pulse' />
-            <div className='h-5 w-20 rounded-full bg-gray-300 dark:bg-gray-600 animate-pulse' />
-          </div>
-
-          {/* CTA button placeholder */}
-          <div className='mt-auto h-10 w-32 rounded-lg bg-gray-300 dark:bg-gray-600 animate-pulse' />
-        </div>
-
-        {/* Moving shimmer overlay */}
-        <div
-          className='absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent dark:via-gray-700/50 animate-shimmer'
-          style={{ animationDuration: "2s" }}
+      <div className='relative h-[70vh] w-full overflow-hidden sm:rounded-xl'>
+        {/* Festival-themed placeholder image */}
+        <Image
+          src='/banner.jpg' alt='banner'
+          fill
+          priority
+          className='object-cover blur-sm'
+          sizes='(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw'
         />
 
-        {/* Navigation dots placeholder */}
-        <div className='absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2'>
-          {[...Array(3)].map((_, i) => (
-            <div
-              key={i}
-              className='h-2 w-2 rounded-full bg-gray-300/80 dark:bg-gray-600/80 animate-pulse'
-            />
-          ))}
+        {/* Gradient overlay */}
+        <div className='absolute inset-0 bg-gradient-to-r from-purple-900/80 to-transparent' />
+
+        {/* Animated shimmer overlay */}
+        <div className='absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer' />
+
+        {/* Content placeholder */}
+        <div className='relative h-full w-full flex flex-col justify-end p-8 md:p-16'>
+          <div className='max-w-2xl'>
+            {/* Slide counter placeholder */}
+            <div className='flex items-center mb-6'>
+              <div className='text-6xl font-bold text-white/30'>00</div>
+              <div className='h-px w-16 bg-amber-400 mx-4' />
+              <div className='text-lg font-light text-white/70'>00</div>
+            </div>
+
+            {/* Text placeholders */}
+            <div className='space-y-4 mb-8'>
+              <div className='h-6 w-32 bg-white/20 rounded-full animate-pulse'></div>
+              <div className='h-10 w-full max-w-md bg-white/20 rounded-lg animate-pulse'></div>
+            </div>
+          </div>
         </div>
       </div>
     );
