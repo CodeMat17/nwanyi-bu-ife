@@ -2,16 +2,16 @@
 
 import CulturalPattern from "@/components/CulturalPattern";
 import NewsBanner from "@/components/news/NewsBanner";
-import { Button } from "@/components/ui/button";
 import { api } from "@/convex/_generated/api";
 import { useQuery } from "convex/react";
 import dayjs from "dayjs";
 import { motion, useScroll } from "framer-motion";
-import { ArrowLeft, ArrowRight, Calendar, Eye, Share2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, Calendar } from "lucide-react";
 import Image from "next/image";
 import { notFound, useParams, useRouter } from "next/navigation";
 import { useEffect, useMemo } from "react";
 import { SanitizedArticleContent } from "@/components/SanitizedArticleContent";
+import { ShareButton } from "../ShareButton";
 
 export default function NewsSlugPage() {
   const params = useParams() 
@@ -94,17 +94,15 @@ export default function NewsSlugPage() {
           </motion.button>
 
           <div className='flex items-center space-x-2 md:space-x-4'>
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              className='flex items-center space-x-2 bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full px-3 md:px-4 py-2 text-gray-700 dark:text-gray-300'>
-              <Eye size={14} />
-              <span className='text-sm'>{"2,300"}</span>
-            </motion.div>
+           
 
-            <Button className='group rounded-full bg-amber-500 text-white hover:text-amber-500 transition-all duration-300 hover:scale-105'>
-              <Share2 className='w-5 h-5 transition duration-500 group-hover:-rotate-45' />{" "}
-              <span className='hidden sm:inline'>share</span>
-            </Button>
+            <ShareButton
+              title={article.title}
+              text={`Read this update from Nwanyị bụ ịfe festival: ${article.excerpt}`}
+              url={window.location.href}
+            />
+
+           
           </div>
         </div>
       </motion.nav>

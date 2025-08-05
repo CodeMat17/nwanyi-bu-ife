@@ -1,21 +1,19 @@
 "use client";
 
-import Image from "next/image";
-import { motion } from "framer-motion";
-import dayjs from "dayjs";
-import { Share2, ArrowLeft } from "lucide-react";
+import CulturalPattern from "@/components/CulturalPattern";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { toast } from "sonner";
-import Link from "next/link";
-import CulturalPattern from "@/components/CulturalPattern";
-import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
-import { SanitizedArticleContent } from "../SanitizedArticleContent";
+import { useQuery } from "convex/react";
+import dayjs from "dayjs";
+import { motion } from "framer-motion";
+import { ArrowLeft } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useMemo } from "react";
-
-
+import { SanitizedArticleContent } from "../SanitizedArticleContent";
+import { ShareButton } from "../ShareButton";
 
 const InterviewSlugPage = () => {
   const params = useParams();
@@ -30,26 +28,7 @@ const InterviewSlugPage = () => {
     slug ? { slug } : "skip"
   );
 
-  const handleShare = () => {
-    if (!interview) return;
-
-    const shareData = {
-      title: interview.title,
-      text: `Read this interview from Nwanyị bụ Ịfe Festival: ${interview.excerpt}`,
-      url: window.location.href,
-    };
-
-    if (navigator.share) {
-      navigator.share(shareData).catch(() => {
-        toast.error("Failed to share");
-      });
-    } else {
-      navigator.clipboard
-        .writeText(window.location.href)
-        .then(() => toast.success("Link copied to clipboard!"))
-        .catch(() => toast.error("Failed to copy link"));
-    }
-  };
+ 
 
   if (interview === undefined) {
     return (
@@ -153,18 +132,13 @@ const InterviewSlugPage = () => {
               </div>
             </div>
           </div>
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.3 }}>
-            <Button
-              variant='outline'
-              className='flex items-center gap-2 border-amber-500 text-amber-600 hover:bg-amber-50 hover:shadow-md transition-all'
-              onClick={handleShare}>
-              <Share2 className='h-4 w-4' />
-              Share
-            </Button>
-          </motion.div>
+          {interview && (
+            <ShareButton
+              title={interview.title}
+              text={`Read this interview from Nwanyị bụ ịfe festival: ${interview.excerpt}`}
+              url={window.location.href}
+            />
+          )}
         </div>
 
         <motion.div

@@ -1,12 +1,5 @@
 "use client";
 
-import { Menu, Sun, Moon } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -16,6 +9,13 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Menu, Moon, Sun } from "lucide-react";
+import { useTheme } from "next-themes";
+import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 
 type NavItem = {
   name: string;
@@ -63,6 +63,7 @@ const mobileNavigation: NavItem[] = [
 
   { name: "Schedule", href: "/schedule" },
   { name: "Speakers", href: "/speakers" },
+  { name: "Interviews", href: "/interviews" },
   { name: "Gallery", href: "/gallery" },
   { name: "News & Updates", href: "/news" },
   { name: "Nominate Someone", href: "/nomination" },
@@ -224,7 +225,7 @@ export default function Header() {
               <SheetContent
                 side='right'
                 className='px-4 w-[300px] sm:w-[400px] bg-white dark:bg-gray-900 overflow-y-auto'>
-                <nav className='flex flex-col gap-2 mt-8'>
+                <nav className='flex flex-col gap-1 mt-8'>
                   {mobileNavigation.map((item) => (
                     <SheetTrigger asChild key={item.name}>
                       <Link

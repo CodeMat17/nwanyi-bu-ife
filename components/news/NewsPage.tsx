@@ -121,11 +121,11 @@ const ArticleCard = ({
             <MousePointerClick className='h-4 w-4 ml-1 transition-transform duration-500 group-hover:ml-3 group-hover:rotate-90 group-hover:scale-200' />
           </Link>
         </Button>
-        <ShareButton
-          path={`/news/${article.slug}`}
-          title={article.title || ""}
-          description={article.excerpt || ""}
-        />
+        {/* <ShareButton       
+          title={article.title }
+          text={article.excerpt}
+          url={window.location.href}
+        /> */}
       </div>
     </div>
   </motion.div>
@@ -277,11 +277,11 @@ export default function NewsPage() {
                   </span>
                 </div>
                 <div>
-                  <ShareButton
-                    path={`/news/${displayArticle.slug}`}
-                    title={displayArticle.title || ""}
-                    description={displayArticle.excerpt || ""}
-                    showText
+                  <ShareButton               
+                    title={displayArticle.title}
+                    text={`Read this article from Nwanyị bụ ịfe festival: ${displayArticle.excerpt}`}
+                    url={window.location.href}
+                 
                   />
                 </div>
               </div>
