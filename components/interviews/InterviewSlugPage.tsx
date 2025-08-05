@@ -1,6 +1,5 @@
 "use client";
 
-import { useParams } from "next/navigation";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import dayjs from "dayjs";
@@ -13,21 +12,15 @@ import CulturalPattern from "@/components/CulturalPattern";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { SanitizedArticleContent } from "../SanitizedArticleContent";
+import { useParams } from "next/navigation";
 
 
 
 const InterviewSlugPage = () => {
-  const params = useParams();
-  const slug = params.slug as string;
-
-
+  const {slug} = useParams() as { slug: string };
 
   // Fetch the current interview
   const interview = useQuery(api.interviews.getInterviewBySlug, { slug });
-
-
-
-
 
   const handleShare = () => {
     if (!interview) return;
@@ -158,8 +151,7 @@ const InterviewSlugPage = () => {
       </motion.header>
 
       {/* Content */}
-      <SanitizedArticleContent content={ interview.content} />
- 
+      <SanitizedArticleContent content={interview.content} />
     </div>
   );
 };
