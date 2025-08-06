@@ -20,6 +20,10 @@ type News = {
   title: string;
 };
 
+export async function generateSitemaps() {
+  return [{ id: 0 }];
+}
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://www.nwanyi-bu-ife.com.ng";
 
@@ -94,11 +98,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ];
 
   try {
-    // Fetch dynamic content directly from Convex
     const interviews = await fetchQuery(api.interviews.getInterviews, {});
     const news = await fetchQuery(api.news.getAll, {});
 
-    // Dynamic pages - using string[] for images as required by MetadataRoute.Sitemap
+    // Convert images to string array format
     const interviewEntries = (interviews as Interview[]).map((interview) => ({
       url: `${baseUrl}/interviews/${interview.slug}`,
       lastModified: new Date(interview.date),
