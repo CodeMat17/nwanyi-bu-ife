@@ -4,14 +4,172 @@
 import SectionTitle from "@/components/SectionTitle";
 import CulturalPattern from "@/components/CulturalPattern";
 import { motion } from "framer-motion";
-import { Mail, MapPin, Phone, Send, Clock } from "lucide-react";
+import { Mail, MapPin, Phone, Send, Clock, CheckCircle } from "lucide-react";
 import GlowingBanner from "@/components/GlowingBanner";
+import { useState } from "react";
+import { toast } from "sonner";
+import { Button } from "../ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
+
+interface FormData {
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+}
+
+interface FormErrors {
+  name?: string;
+  email?: string;
+  subject?: string;
+  message?: string;
+}
 
 export default function ContactPage() {
+  const [formData, setFormData] = useState<FormData>({
+    name: "",
+    email: "",
+    subject: "",
+    message: "",
+  });
+
+  const [errors, setErrors] = useState<FormErrors>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
+
+  const validateForm = (): boolean => {
+    const newErrors: FormErrors = {};
+
+    if (!formData.name.trim()) {
+      newErrors.name = "Name is required";
+    } else if (formData.name.length > 100) {
+      newErrors.name = "Name must be less than 100 characters";
+    }
+
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = "Please enter a valid email address";
+    }
+
+    if (!formData.subject.trim()) {
+      newErrors.subject = "Subject is required";
+    } else if (formData.subject.length > 200) {
+      newErrors.subject = "Subject must be less than 200 characters";
+    }
+
+    if (!formData.message.trim()) {
+      newErrors.message = "Message is required";
+    } else if (formData.message.length > 2000) {
+      newErrors.message = "Message must be less than 2000 characters";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+
+    // Clear error when user starts typing
+    if (errors[name as keyof FormErrors]) {
+      setErrors((prev) => {
+        const newErrors = { ...prev };
+        delete newErrors[name as keyof FormErrors];
+        return newErrors;
+      });
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!validateForm()) {
+      toast.error("Please fix the errors in the form");
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch("/api/send-email", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...formData,
+          to:
+            process.env.NEXT_PUBLIC_CONTACT_EMAIL || "contact@nwanyibuife.org",
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to send message");
+      }
+
+      toast.success("Message sent successfully!");
+      setFormData({
+        name: "",
+        email: "",
+        subject: "",
+        message: "",
+      });
+      setIsSuccessModalOpen(true);
+    } catch (error: unknown) {
+      console.error("Error sending message:", error);
+
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "Failed to send message. Please try again.";
+
+      toast.error(errorMessage);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div className='relative overflow-hidden'>
       <CulturalPattern />
+
+      {/* Success Modal */}
+      {/* Success Dialog */}
+      <Dialog open={isSuccessModalOpen} onOpenChange={setIsSuccessModalOpen}>
+        <DialogContent className='sm:max-w-md rounded-lg'>
+          <DialogHeader>
+            <div className='flex flex-col items-center text-center space-y-4'>
+              <div className='mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-green-100'>
+                <CheckCircle className='h-10 w-10 text-green-600' />
+              </div>
+              <DialogTitle className='text-2xl font-bold'>
+                Message Sent Successfully!
+              </DialogTitle>
+              <p className='text-muted-foreground'>
+                Thank you for reaching out to us. Our team will get back to you
+                within 24-48 hours.
+              </p>
+            </div>
+          </DialogHeader>
+          <div className='flex justify-center'>
+            <Button
+              type='button'
+              className='rounded-full'
+              onClick={() => setIsSuccessModalOpen(false)}>
+              Continue Exploring
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* Glowing Banner */}
       <GlowingBanner
@@ -20,18 +178,18 @@ export default function ContactPage() {
       />
 
       {/* Contact Section */}
-      <section className='py-16 px-4 max-w-7xl mx-auto'>
+      <section className='pt-8 pb-16 px-4 max-w-7xl mx-auto'>
         <div className='grid grid-cols-1 lg:grid-cols-2 gap-12'>
           {/* Contact Form */}
           <div>
-              <motion.div
-            className='bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-xl'
-            initial={{ y: 30, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.6 }}>
-            <h2 className='text-3xl font-bold mb-6'>Send Us a Message</h2>
+            <motion.div
+              className='bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-xl'
+              initial={{ y: 30, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.6 }}>
+              <h2 className='text-3xl font-bold mb-6'>Send Us a Message</h2>
 
-            <form className='space-y-6'>
+              <form className='space-y-4' onSubmit={handleSubmit}>
                 <div>
                   <label
                     htmlFor='name'
@@ -41,10 +199,20 @@ export default function ContactPage() {
                   <input
                     type='text'
                     id='name'
-                    className='w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent'
+                    name='name'
+                    value={formData.name}
+                    onChange={handleChange}
+                    className={`w-full px-4 py-3 rounded-xl border ${
+                      errors.name ? "border-red-500" : "border-gray-300"
+                    } focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent`}
                     placeholder='Your full name'
+                    required
                   />
+                  {errors.name && (
+                    <p className='mt-1 text-sm text-red-500'>{errors.name}</p>
+                  )}
                 </div>
+
                 <div>
                   <label
                     htmlFor='email'
@@ -54,49 +222,108 @@ export default function ContactPage() {
                   <input
                     type='email'
                     id='email'
-                    className='w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent'
+                    name='email'
+                    value={formData.email}
+                    onChange={handleChange}
+                    className={`w-full px-4 py-3 rounded-xl border ${
+                      errors.email ? "border-red-500" : "border-gray-300"
+                    } focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent`}
                     placeholder='you@example.com'
+                    required
                   />
+                  {errors.email && (
+                    <p className='mt-1 text-sm text-red-500'>{errors.email}</p>
+                  )}
                 </div>
 
-              <div>
-                <label
-                  htmlFor='subject'
-                  className='block text-muted-foreground mb-2'>
-                  Subject
-                </label>
-                <input
-                  type='text'
-                  id='subject'
-                  className='w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent'
-                  placeholder='How can we help?'
-                />
-              </div>
+                <div>
+                  <label
+                    htmlFor='subject'
+                    className='block text-muted-foreground mb-2'>
+                    Subject
+                  </label>
+                  <input
+                    type='text'
+                    id='subject'
+                    name='subject'
+                    value={formData.subject}
+                    onChange={handleChange}
+                    className={`w-full px-4 py-3 rounded-xl border ${
+                      errors.subject ? "border-red-500" : "border-gray-300"
+                    } focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent`}
+                    placeholder='How can we help?'
+                    required
+                  />
+                  {errors.subject && (
+                    <p className='mt-1 text-sm text-red-500'>
+                      {errors.subject}
+                    </p>
+                  )}
+                </div>
 
-              <div>
-                <label
-                  htmlFor='message'
-                  className='block text-muted-foreground mb-2'>
-                  Your Message
-                </label>
-                <textarea
-                  id='message'
-                  rows={5}
-                  className='w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent'
-                  placeholder='Type your message here...'></textarea>
-              </div>
+                <div>
+                  <label
+                    htmlFor='message'
+                    className='block text-muted-foreground mb-2'>
+                    Your Message
+                  </label>
+                  <textarea
+                    id='message'
+                    name='message'
+                    value={formData.message}
+                    onChange={handleChange}
+                    rows={5}
+                    className={`w-full px-4 py-3 rounded-xl border ${
+                      errors.message ? "border-red-500" : "border-gray-300"
+                    } focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent`}
+                    placeholder='Type your message here...'
+                    required
+                  />
+                  {errors.message && (
+                    <p className='mt-1 text-sm text-red-500'>
+                      {errors.message}
+                    </p>
+                  )}
+                </div>
 
-              <button
-                type='submit'
-                className='w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-4 rounded-full transition-colors flex items-center justify-center group'>
-                Send Message
-                <Send className='h-5 w-5 ml-2 transition-transform group-hover:translate-x-1' />
-              </button>
-            </form>
-          </motion.div>
-
+                <button
+                  type='submit'
+                  disabled={isSubmitting}
+                  className={`w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-4 rounded-full transition-colors flex items-center justify-center group ${
+                    isSubmitting ? "opacity-70 cursor-not-allowed" : ""
+                  }`}>
+                  {isSubmitting ? (
+                    <div className='flex items-center'>
+                      <svg
+                        className='animate-spin -ml-1 mr-3 h-5 w-5 text-white'
+                        xmlns='http://www.w3.org/2000/svg'
+                        fill='none'
+                        viewBox='0 0 24 24'>
+                        <circle
+                          className='opacity-25'
+                          cx='12'
+                          cy='12'
+                          r='10'
+                          stroke='currentColor'
+                          strokeWidth='4'></circle>
+                        <path
+                          className='opacity-75'
+                          fill='currentColor'
+                          d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z'></path>
+                      </svg>
+                      Sending...
+                    </div>
+                  ) : (
+                    <>
+                      Send Message
+                      <Send className='h-5 w-5 ml-2 transition-transform group-hover:translate-x-1' />
+                    </>
+                  )}
+                </button>
+              </form>
+            </motion.div>
           </div>
-        
+
           {/* Contact Information */}
           <motion.div
             className='space-y-8'
@@ -183,39 +410,6 @@ export default function ContactPage() {
         </div>
       </section>
 
-      {/* Map Section */}
-      {/* <section className='py-12 px-4 max-w-7xl mx-auto'>
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7 }}>
-          <div className='text-center mb-12'>
-            <SectionTitle
-              title='Our Location'
-              subtitle='Visit our headquarters during festival preparations'
-            />
-          </div>
-
-          <div className='rounded-3xl overflow-hidden shadow-2xl h-[500px] relative'>
-            <div className='bg-gray-200 dark:bg-gray-800 border-2 border-dashed w-full h-full flex items-center justify-center'>
-              <div className='text-center'>
-                <MapPin className='h-12 w-12 text-amber-600 mx-auto mb-4' />
-                <p className='text-xl font-bold'>Cultural Heritage Center</p>
-                <p className='text-gray-600'>
-                  25 Women&apos;s Way, Enugu, Nigeria
-                </p>
-              </div>
-            </div>
-
-            <div className='absolute bottom-4 left-4 bg-white px-4 py-2 rounded-full shadow-lg'>
-              <button className='text-purple-700 font-bold'>
-                Get Directions
-              </button>
-            </div>
-          </div>
-        </motion.div>
-      </section> */}
-
       {/* FAQ Section */}
       <section className='py-16 bg-gradient-to-r from-amber-50 dark:from-amber-950 to-purple-50 dark:to-sky-800'>
         <div className='max-w-5xl mx-auto px-4'>
@@ -260,15 +454,11 @@ export default function ContactPage() {
                 initial={{ opacity: 0, x: index % 2 === 0 ? -20 : 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}>
-                <h3 className='text-xl font-bold mb-3'>
-                  {faq.question}
-                </h3>
+                <h3 className='text-xl font-bold mb-3'>{faq.question}</h3>
                 <p className='text-muted-foreground'>{faq.answer}</p>
               </motion.div>
             ))}
           </div>
-
-       
         </div>
       </section>
 
