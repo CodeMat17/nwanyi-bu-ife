@@ -60,7 +60,7 @@ export const metadata: Metadata = {
 
 const Nomination = () => {
   return (
-    <div className='min-h-screen bg-gradient-to-b from-amber-50 to-white'>
+    <div className='min-h-screen'>
       {/* Your nomination page content */}
      <NominationPage />
     </div>

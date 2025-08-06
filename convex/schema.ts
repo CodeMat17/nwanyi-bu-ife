@@ -112,7 +112,23 @@ export default defineSchema({
     .index("by_category", ["category"]),
 
   gallery: defineTable({
-    image: v.string(), 
+    image: v.string(),
     imageId: v.id("_storage"),
   }).index("by_imageId", ["imageId"]),
+
+  nominations: defineTable({
+    nominator: v.object({
+      fullName: v.string(),
+      email: v.string(),
+      phone: v.string(),
+    }),
+    nominee: v.object({
+      fullName: v.string(),
+      title: v.string(),
+      email: v.string(),
+      phone: v.string(),
+      reason: v.string(),
+    }),
+  }),
+  
 });
