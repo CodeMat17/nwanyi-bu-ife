@@ -21,8 +21,7 @@ export default function Footer() {
               Nwanyị bụ <span className="text-amber-500">ịfe</span>
             </h3>
             <p className='text-gray-300 mb-6 leading-relaxed'>
-              Empowering women, celebrating heritage, and honoring achievements
-              since 2015 through cultural excellence and community impact.
+              Empowering women, celebrating heritage, and honoring achievements through cultural excellence and community impact.
             </p>
             <div className='flex flex-wrap gap-8'>
               <a
@@ -142,7 +141,7 @@ export default function Footer() {
                 <span>
                   International Conference Centre
                   <br />
-                  IMT Enugu, Nigeria
+                  Enugu, Nigeria
                 </span>
               </li>
               <li className='flex'>
@@ -153,7 +152,7 @@ export default function Footer() {
                   <path d='M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z' />
                 </svg>
                 <span>
-                  +234 812 345 6789
+                  +234 801 234 5678
                 </span>
               </li>
               <li className='flex'>
@@ -164,7 +163,7 @@ export default function Footer() {
                   <path d='M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z' />
                   <path d='M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z' />
                 </svg>
-                <span>info@nwanyibuife.org</span>
+                <span>email@nwanyi-bu-ife.com.ng</span>
               </li>
             </ul>
           </div>

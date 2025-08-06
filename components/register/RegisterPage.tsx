@@ -434,7 +434,7 @@ export default function RegisterPage() {
                 </p>
                 <p className='text-xs sm:text-sm flex items-center'>
                   <Mail className='text-amber-600 mr-1 sm:mr-2' size={12} />
-                  <span>registration@nwanyibuife.org</span>
+                  <span>email@nwanyi-bu-ife.com.ng</span>
                 </p>
                 <p className='text-xs sm:text-sm flex items-center mt-1'>
                   <Phone className='text-amber-600 mr-1 sm:mr-2' size={12} />

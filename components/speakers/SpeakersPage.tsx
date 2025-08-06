@@ -5,6 +5,7 @@ import GlowingBanner from "@/components/GlowingBanner";
 import Speakers from "@/components/program/Speakers";
 import { motion } from "framer-motion";
 import { Calendar, MapPin, Mic } from "lucide-react";
+import Link from "next/link";
 
 export default function SpeakersPage() {
   return (
@@ -53,7 +54,10 @@ export default function SpeakersPage() {
             </div>
 
             <button className='bg-amber-500 hover:bg-amber-600 text-white font-bold px-10 py-4 rounded-full text-lg transition-all duration-300 transform hover:scale-105 shadow-lg'>
+              <Link href='/register'>
               Register Now
+              </Link>
+              
             </button>
           </motion.div>
         </div>

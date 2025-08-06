@@ -342,11 +342,9 @@ export default function ContactPage() {
                   <div>
                     <h3 className='font-bold text-lg mb-1'>Email Us</h3>
                     <p className='text-muted-foreground'>
-                      contact@nwanyibuife.org
+                      email@nwanyi-bu-ife.com.ng
                     </p>
-                    <p className='text-muted-foreground'>
-                      partnerships@nwanyibuife.org
-                    </p>
+                  
                   </div>
                 </div>
 
@@ -445,7 +443,7 @@ export default function ContactPage() {
               {
                 question: "Can I perform or showcase my work at the festival?",
                 answer:
-                  "We accept applications for performers and exhibitors. The application period opens January 15, 2025. Check our Participate page for details.",
+                  "We accept applications for performers and exhibitors. The application period opens January 15, 2025. Check our Partners page for details.",
               },
             ].map((faq, index) => (
               <motion.div
@@ -463,7 +461,7 @@ export default function ContactPage() {
       </section>
 
       {/* CTA Section */}
-      <section className='py-20 bg-gradient-to-r from-purple-900 to-amber-800 text-white'>
+      {/* <section className='py-20 bg-gradient-to-r from-purple-900 to-amber-800 text-white'>
         <div className='max-w-4xl mx-auto px-4 text-center'>
           <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
@@ -507,7 +505,7 @@ export default function ContactPage() {
             </div>
           </motion.div>
         </div>
-      </section>
+      </section> */}
     </div>
   );
 }

@@ -162,9 +162,9 @@ const InterviewSlugPage = () => {
           )}
           <div className='absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent' />
           <div className='absolute bottom-0 left-0 p-6 text-white'>
-            <h2 className='text-xl font-semibold'>Featured Interviewee</h2>
+            <h2 className='text-xl font-semibold'>{ interview.name }</h2>
             <p className='text-amber-300 font-medium'>
-              {interview.name}, {interview.position}
+             {interview.position}
             </p>
           </div>
         </motion.div>

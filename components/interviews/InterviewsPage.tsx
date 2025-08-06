@@ -338,13 +338,9 @@ export default function InterviewsPage() {
             </p>
             <div className='flex flex-wrap gap-4 justify-center'>
               <Button variant='secondary' asChild>
-                <Link href='/share'>Share Your Story</Link>
+                <Link href='/contact'>Share Your Story</Link>
               </Button>
-              <Button
-                variant='outline'
-                className='bg-transparent border-white text-white hover:bg-white/10 hover:text-white'>
-                Learn More
-              </Button>
+            
             </div>
           </motion.div>
         </div>

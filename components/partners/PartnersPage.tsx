@@ -7,6 +7,7 @@ import { api } from "@/convex/_generated/api";
 import { useQuery } from "convex/react";
 import { motion } from "framer-motion";
 import { Handshake } from "lucide-react";
+import Link from "next/link";
 
 
 export default function PartnersPage() {
@@ -166,7 +167,10 @@ const partners = useQuery(api.partners.getPartnershipSupport)
                 className='bg-amber-500 hover:bg-amber-600 text-white font-bold px-8 py-4 rounded-full text-lg transition-all duration-300 shadow-lg'
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}>
+                <Link href='/contact'>
                 Contact Our Partnership Team
+                </Link>
+                
               </motion.button>
             </div>
           </motion.div>
