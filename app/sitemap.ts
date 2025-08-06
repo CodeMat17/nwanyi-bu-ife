@@ -1,218 +1,231 @@
 import { api } from "@/convex/_generated/api";
-import { Doc } from "@/convex/_generated/dataModel";
 import { fetchQuery } from "convex/nextjs";
+import { NextResponse } from "next/server";
+import { Doc } from "@/convex/_generated/dataModel";
 
-type SitemapEntry = {
+interface SitemapRoute {
   url: string;
-  lastModified?: string | Date;
-  changeFrequency?:
-    | "always"
-    | "hourly"
-    | "daily"
-    | "weekly"
-    | "monthly"
-    | "yearly"
-    | "never";
-  priority?: number;
-  images?: {
+  lastmod: string;
+  changefreq: string;
+  priority: string;
+  image?: {
     url: string;
-    caption?: string;
     title?: string;
-    geoLocation?: string;
-    license?: string;
-  }[];
-};
-
-export async function generateSitemaps() {
-  return [{ id: 0 }];
+    caption?: string;
+  };
 }
 
-export default async function sitemap(): Promise<SitemapEntry[]> {
-  const baseUrl = "https://www.nwanyi-bu-ife.com.ng";
-  const now = new Date();
+export async function GET() {
+  const baseUrl =
+    process.env.NEXT_PUBLIC_BASE_URL || "https://www.nwanyi-bu-ife.com.ng";
 
-  // Static pages configuration
-  const staticPages: SitemapEntry[] = [
+  // Fetch dynamic data from Convex
+  const [interviews, news] = await Promise.all([
+    fetchQuery(api.interviews.getInterviews).catch(() => []),
+    fetchQuery(api.news.getAll).catch(() => []),
+  ]);
+
+  // Static routes with enhanced metadata
+  const staticRoutes: SitemapRoute[] = [
     {
       url: baseUrl,
-      lastModified: now,
-      changeFrequency: "daily",
-      priority: 1.0,
-      images: [
-        {
-          url: `${baseUrl}/opengraph-image.jpg`,
-          title: "Nwanyi Bu Ife Festival Homepage",
-        },
-      ],
+      lastmod: new Date().toISOString(),
+      changefreq: "daily",
+      priority: "1.0",
+      image: {
+        url: `${baseUrl}/opengraph-image.jpg`,
+        title: "Nwanyi Bu Ife Festival Homepage",
+        caption: "Celebrating Igbo Women's Heritage and Culture",
+      },
     },
     {
       url: `${baseUrl}/about`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.8,
-      images: [
-        {
-          url: `${baseUrl}/about/opengraph-image.jpg`,
-          title: "About Nwanyi Bu Ife Festival",
-        },
-      ],
+      lastmod: new Date().toISOString(),
+      changefreq: "monthly",
+      priority: "0.8",
+      image: {
+        url: `${baseUrl}/about/opengraph-image.jpg`,
+        title: "About Nwanyi Bu Ife Festival",
+        caption: "Our mission and cultural significance",
+      },
     },
     {
       url: `${baseUrl}/contact`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.8,
-      images: [
-        {
-          url: `${baseUrl}/contact/opengraph-image.jpg`,
-          title: "Contact Nwanyi Bu Ife Festival",
-        },
-      ],
+      lastmod: new Date().toISOString(),
+      changefreq: "monthly",
+      priority: "0.8",
+      image: {
+        url: `${baseUrl}/contact/opengraph-image.jpg`,
+        title: "Contact Nwanyi Bu Ife Festival",
+        caption: "Get in touch with our team",
+      },
     },
     {
       url: `${baseUrl}/gallery`,
-      lastModified: now,
-      changeFrequency: "weekly",
-      priority: 0.7,
-      images: [
-        {
-          url: `${baseUrl}/gallery/opengraph-image.jpg`,
-          title: "Gallery - Nwanyi Bu Ife Festival",
-        },
-      ],
+      lastmod: new Date().toISOString(),
+      changefreq: "weekly",
+      priority: "0.7",
+      image: {
+        url: `${baseUrl}/gallery/opengraph-image.jpg`,
+        title: "Gallery - Nwanyi Bu Ife Festival",
+        caption: "Visual celebration of our cultural heritage",
+      },
     },
     {
       url: `${baseUrl}/interviews`,
-      lastModified: now,
-      changeFrequency: "weekly",
-      priority: 0.9,
-      images: [
-        {
-          url: `${baseUrl}/interviews/opengraph-image.jpg`,
-          title: "Interviews - Nwanyi Bu Ife Festival",
-        },
-      ],
+      lastmod: new Date().toISOString(),
+      changefreq: "weekly",
+      priority: "0.9",
+      image: {
+        url: `${baseUrl}/interviews/opengraph-image.jpg`,
+        title: "Interviews - Nwanyi Bu Ife Festival",
+        caption: "Insights from cultural custodians",
+      },
     },
     {
       url: `${baseUrl}/news`,
-      lastModified: now,
-      changeFrequency: "daily",
-      priority: 0.9,
-      images: [
-        {
-          url: `${baseUrl}/news/opengraph-image.jpg`,
-          title: "News - Nwanyi Bu Ife Festival",
-        },
-      ],
+      lastmod: new Date().toISOString(),
+      changefreq: "daily",
+      priority: "0.9",
+      image: {
+        url: `${baseUrl}/news/opengraph-image.jpg`,
+        title: "News - Nwanyi Bu Ife Festival",
+        caption: "Latest updates about our festival",
+      },
     },
     {
       url: `${baseUrl}/nomination`,
-      lastModified: now,
-      changeFrequency: "weekly",
-      priority: 0.7,
-      images: [
-        {
-          url: `${baseUrl}/nomination/opengraph-image.jpg`,
-          title: "Nomination - Nwanyi Bu Ife Festival",
-        },
-      ],
+      lastmod: new Date().toISOString(),
+      changefreq: "weekly",
+      priority: "0.7",
+      image: {
+        url: `${baseUrl}/nomination/opengraph-image.jpg`,
+        title: "Nomination - Nwanyi Bu Ife Festival",
+        caption: "Nominate outstanding Igbo women",
+      },
     },
     {
       url: `${baseUrl}/partners`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.6,
-      images: [
-        {
-          url: `${baseUrl}/partners/opengraph-image.jpg`,
-          title: "Partners - Nwanyi Bu Ife Festival",
-        },
-      ],
+      lastmod: new Date().toISOString(),
+      changefreq: "monthly",
+      priority: "0.6",
+      image: {
+        url: `${baseUrl}/partners/opengraph-image.jpg`,
+        title: "Partners - Nwanyi Bu Ife Festival",
+        caption: "Our valued sponsors and collaborators",
+      },
     },
     {
       url: `${baseUrl}/register`,
-      lastModified: now,
-      changeFrequency: "weekly",
-      priority: 0.9,
-      images: [
-        {
-          url: `${baseUrl}/register/opengraph-image.jpg`,
-          title: "Register - Nwanyi Bu Ife Festival",
-        },
-      ],
+      lastmod: new Date().toISOString(),
+      changefreq: "weekly",
+      priority: "0.9",
+      image: {
+        url: `${baseUrl}/register/opengraph-image.jpg`,
+        title: "Register - Nwanyi Bu Ife Festival",
+        caption: "Join our cultural celebration",
+      },
     },
     {
       url: `${baseUrl}/schedule`,
-      lastModified: now,
-      changeFrequency: "weekly",
-      priority: 0.8,
-      images: [
-        {
-          url: `${baseUrl}/schedule/opengraph-image.jpg`,
-          title: "Schedule - Nwanyi Bu Ife Festival",
-        },
-      ],
+      lastmod: new Date().toISOString(),
+      changefreq: "weekly",
+      priority: "0.8",
+      image: {
+        url: `${baseUrl}/schedule/opengraph-image.jpg`,
+        title: "Schedule - Nwanyi Bu Ife Festival",
+        caption: "Event timeline and activities",
+      },
     },
     {
       url: `${baseUrl}/speakers`,
-      lastModified: now,
-      changeFrequency: "weekly",
-      priority: 0.8,
-      images: [
-        {
-          url: `${baseUrl}/speakers/opengraph-image.jpg`,
-          title: "Speakers - Nwanyi Bu Ife Festival",
-        },
-      ],
+      lastmod: new Date().toISOString(),
+      changefreq: "weekly",
+      priority: "0.8",
+      image: {
+        url: `${baseUrl}/speakers/opengraph-image.jpg`,
+        title: "Speakers - Nwanyi Bu Ife Festival",
+        caption: "Our distinguished guests and presenters",
+      },
     },
   ];
 
-  try {
-    // Fetch with proper error handling and timeouts
-    const [interviews, news] = await Promise.all([
-      fetchQuery(api.interviews.getInterviews, {}).catch(() => []),
-      fetchQuery(api.news.getAll, {}).catch(() => []),
-    ]);
+  // Dynamic interview routes
+  const interviewRoutes: SitemapRoute[] = (
+    interviews as Doc<"interviews">[]
+  ).map((interview) => ({
+    url: `${baseUrl}/interviews/${interview.slug}`,
+    lastmod: new Date(interview.date).toISOString(),
+    changefreq: "weekly",
+    priority: "0.8",
+    image: {
+      url: interview.image.startsWith("http")
+        ? interview.image
+        : `${baseUrl}${interview.image}`,
+      title: interview.title,
+      caption: interview.excerpt,
+    },
+  }));
 
-    // Dynamic entries with production safeguards
-    const dynamicEntries = [
-      ...(interviews ?? []).map((interview: Doc<"interviews">) => ({
-        url: `${baseUrl}/interviews/${interview.slug}`,
-        lastModified: new Date(interview.date),
-        changeFrequency: "weekly" as const,
-        priority: 0.8,
-        images: interview.image
-          ? [
-              {
-                url: interview.image.startsWith("http")
-                  ? interview.image
-                  : `${baseUrl}${interview.image}`,
-                title: interview.title,
-              },
-            ]
-          : [],
-      })),
-      ...(news ?? []).map((newsItem: Doc<"news">) => ({
-        url: `${baseUrl}/news/${newsItem.slug}`,
-        lastModified: new Date(newsItem.date),
-        changeFrequency: "daily" as const,
-        priority: 0.8,
-        images: newsItem.image
-          ? [
-              {
-                url: newsItem.image.startsWith("http")
-                  ? newsItem.image
-                  : `${baseUrl}${newsItem.image}`,
-                title: newsItem.title,
-              },
-            ]
-          : [],
-      })),
-    ];
+  // Dynamic news routes
+  const newsRoutes: SitemapRoute[] = (news as Doc<"news">[]).map(
+    (newsItem) => ({
+      url: `${baseUrl}/news/${newsItem.slug}`,
+      lastmod: new Date(newsItem.date).toISOString(),
+      changefreq: "daily",
+      priority: "0.8",
+      image: {
+        url: newsItem.image.startsWith("http")
+          ? newsItem.image
+          : `${baseUrl}${newsItem.image}`,
+        title: newsItem.title,
+        caption: newsItem.excerpt,
+      },
+    })
+  );
 
-    return [...staticPages, ...dynamicEntries];
-  } catch (error) {
-    console.error("Error generating dynamic sitemap entries:", error);
-    return staticPages;
-  }
+  // Combine all routes
+  const allRoutes = [...staticRoutes, ...interviewRoutes, ...newsRoutes];
+
+  // Generate XML
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>
+    <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+            xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+      ${allRoutes
+        .map(
+          (route) => `
+        <url>
+          <loc>${route.url}</loc>
+          <lastmod>${route.lastmod}</lastmod>
+          <changefreq>${route.changefreq}</changefreq>
+          <priority>${route.priority}</priority>
+          ${
+            route.image
+              ? `
+          <image:image>
+            <image:loc>${route.image.url}</image:loc>
+            ${
+              route.image.title
+                ? `<image:title><![CDATA[${route.image.title}]]></image:title>`
+                : ""
+            }
+            ${
+              route.image.caption
+                ? `<image:caption><![CDATA[${route.image.caption}]]></image:caption>`
+                : ""
+            }
+          </image:image>`
+              : ""
+          }
+        </url>`
+        )
+        .join("")}
+    </urlset>`;
+
+  return new NextResponse(xml, {
+    headers: {
+      "Content-Type": "application/xml",
+      "Cache-Control": "public, max-age=3600, stale-while-revalidate=1800",
+    },
+  });
 }
