@@ -17,6 +17,12 @@ export async function POST(request: Request) {
     const { name, email, subject, message, to }: EmailRequest =
       await request.json();
 
+    // Debug log (remove in production)
+    console.log(
+      "Sending email with Resend API key:",
+      process.env.RESEND_API_KEY ? "Exists" : "Missing"
+    );
+
     const { error } = await resend.emails.send({
       from: "Nwanyị bụ ịfe <email@nwanyi-bu-ife.com.ng>",
       to: [to],
@@ -26,15 +32,16 @@ export async function POST(request: Request) {
     });
 
     if (error) {
-      throw new Error(error.message);
+     console.error("Resend error:", error);
+     return NextResponse.json({ error: error.message }, { status: 400 });
     }
 
     return NextResponse.json({ success: true });
-  } catch (error: unknown) {
-    const errorMessage =
-      error instanceof Error ? error.message : "Failed to send email";
-
-    console.error("Email sending error:", errorMessage);
-    return NextResponse.json({ error: errorMessage }, { status: 500 });
+  } catch (error) {
+   console.error("Server error:", error);
+   return NextResponse.json(
+     { error: "Internal server error" },
+     { status: 500 }
+   );
   }
 }
