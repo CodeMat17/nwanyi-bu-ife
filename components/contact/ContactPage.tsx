@@ -1,11 +1,11 @@
 // src/app/contact/page.tsx
 "use client";
 
-import SectionTitle from "@/components/SectionTitle";
 import CulturalPattern from "@/components/CulturalPattern";
-import { motion } from "framer-motion";
-import { Mail, MapPin, Phone, Send, Clock, CheckCircle } from "lucide-react";
 import GlowingBanner from "@/components/GlowingBanner";
+import SectionTitle from "@/components/SectionTitle";
+import { motion } from "framer-motion";
+import { CheckCircle, Clock, Mail, MapPin, Phone, Send } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
@@ -341,10 +341,11 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className='font-bold text-lg mb-1'>Email Us</h3>
-                    <a href={"mailto:email@nwanyi-bu-ife.com.ng"} className='text-muted-foreground hover:text-amber-500'>
+                    <a
+                      href={"mailto:email@nwanyi-bu-ife.com.ng"}
+                      className='text-muted-foreground hover:text-amber-500'>
                       email@nwanyi-bu-ife.com.ng
                     </a>
-                  
                   </div>
                 </div>
 
@@ -354,8 +355,11 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className='font-bold text-lg mb-1'>Call Us</h3>
-                    <a href={"tel:+2347030991464"} className='text-muted-foreground hover:text-amber-500'>+234 703 099 1464</a>
-                
+                    <a
+                      href={"tel:+2347030991464"}
+                      className='text-muted-foreground hover:text-amber-500'>
+                      +234 703 099 1464
+                    </a>
                   </div>
                 </div>
 
@@ -365,12 +369,8 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className='font-bold text-lg mb-1'>Visit Us</h3>
-                    <p className='text-muted-foreground'>
-                     83 Park Avenue
-                    </p>
-                    <p className='text-muted-foreground'>
-                      GRA Enugu
-                    </p>
+                    <p className='text-muted-foreground'>83 Park Avenue</p>
+                    <p className='text-muted-foreground'>GRA Enugu</p>
                     <p className='text-muted-foreground'>Nigeria</p>
                   </div>
                 </div>
@@ -385,22 +385,28 @@ export default function ContactPage() {
               </div>
 
               <div className='space-y-3'>
-                <div className='flex justify-between border-b border-white/20 pb-3'>
-                  <span>Monday - Friday</span>
-                  <span className='font-medium'>9:00 AM - 5:00 PM</span>
+                <div className='flex flex-col sm:flex-row justify-between border-b border-white/20 pb-3'>
+                  <p>Monday - Friday</p>
+                  <p className='font-medium text-lg'>9:00 AM - 5:00 PM</p>
                 </div>
-                <div className='flex justify-between border-b border-white/20 pb-3'>
+                <div className='flex flex-col sm:flex-row justify-between border-b border-white/20 pb-3'>
                   <span>Saturday</span>
-                  <span className='font-medium'>10:00 AM - 4:00 PM</span>
+                  <span className='font-medium text-lg'>
+                    10:00 AM - 4:00 PM
+                  </span>
                 </div>
-                <div className='flex justify-between'>
+                <div className='flex flex-col sm:flex-row justify-between'>
                   <span>Sunday</span>
-                  <span className='font-medium'>Closed</span>
+                  <span className='font-medium text-lg'>Closed</span>
                 </div>
               </div>
 
               <div className='mt-6 bg-white/10 rounded-xl p-4'>
-                <p className='font-medium'>Festival Week Hours (Nov 1-7):</p>
+                <div className='font-medium flex flex-col sm:flex-row sm:gap-2'>
+                  <p>Festival Week Hours</p>
+                  <p>(Nov 1-7):</p>
+                </div>
+
                 <p className='text-amber-200'>8:00 AM - 9:00 PM Daily</p>
               </div>
             </div>
