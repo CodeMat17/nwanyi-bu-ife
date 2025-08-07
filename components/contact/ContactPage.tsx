@@ -341,9 +341,9 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className='font-bold text-lg mb-1'>Email Us</h3>
-                    <p className='text-muted-foreground'>
+                    <a href={"mailto:email@nwanyi-bu-ife.com.ng"} className='text-muted-foreground hover:text-amber-500'>
                       email@nwanyi-bu-ife.com.ng
-                    </p>
+                    </a>
                   
                   </div>
                 </div>
@@ -354,8 +354,8 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className='font-bold text-lg mb-1'>Call Us</h3>
-                    <p className='text-muted-foreground'>+234 812 345 6789</p>
-                    <p className='text-muted-foreground'>+234 908 765 4321</p>
+                    <a href={"tel:+2347030991464"} className='text-muted-foreground hover:text-amber-500'>+234 703 099 1464</a>
+                
                   </div>
                 </div>
 
@@ -366,10 +366,10 @@ export default function ContactPage() {
                   <div>
                     <h3 className='font-bold text-lg mb-1'>Visit Us</h3>
                     <p className='text-muted-foreground'>
-                      Cultural Heritage Center
+                     83 Park Avenue
                     </p>
                     <p className='text-muted-foreground'>
-                      25 Women&apos;s Way, Enugu
+                      GRA Enugu
                     </p>
                     <p className='text-muted-foreground'>Nigeria</p>
                   </div>

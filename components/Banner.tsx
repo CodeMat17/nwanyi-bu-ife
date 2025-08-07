@@ -28,8 +28,8 @@ export default function Banner() {
             </Badge>
             <h1
               className={`${fascinate.className} mt-3 text-4xl md:text-5xl font-bold text-amber-500`}>
-              A Woman and Her Power: <br />
-              From Potential to Impact
+              A Woman and Her Light: <br />
+              Illuminating Communities.
             </h1>
             <p className='mt-8 font-semibold text-sm whitespace-nowrap'>
               November 7, 2025
